@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "dgSpecHash": "nSj3fOGZvYo=",
+  "success": true,
+  "projectFilePath": "C:\\project_archive\\AvaloniaApplication1\\AvaloniaApplication1.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\User\\.nuget\\packages\\avalonia\\11.1.0\\avalonia.11.1.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\avalonia.buildservices\\0.0.29\\avalonia.buildservices.0.0.29.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\avalonia.controls.colorpicker\\11.1.0\\avalonia.controls.colorpicker.11.1.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\avalonia.controls.datagrid\\11.1.0\\avalonia.controls.datagrid.11.1.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\avalonia.diagnostics\\11.1.0\\avalonia.diagnostics.11.1.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\avalonia.fonts.inter\\11.1.0\\avalonia.fonts.inter.11.1.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\avalonia.remote.protocol\\11.1.0\\avalonia.remote.protocol.11.1.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\avalonia.themes.fluent\\11.1.0\\avalonia.themes.fluent.11.1.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\avalonia.themes.simple\\11.1.0\\avalonia.themes.simple.11.1.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\bitmiracle.libtiff.net\\2.4.660\\bitmiracle.libtiff.net.2.4.660.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\communitytoolkit.mvvm\\8.2.0\\communitytoolkit.mvvm.8.2.0.nupkg.sha512",
+    "C:\\Users\\User\\.nuget\\packages\\microcom.runtime\\0.11.0\\microcom.runtime.0.11.0.nupkg.sha512"
+  ],
+  "logs": []
+}

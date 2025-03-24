@@ -1,0 +1,136 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|c:\\4 \u043A\u0443\u0440\u0441\\diplom\\editorbit\\views\\mainwindow.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|solutionrelative:editorbit\\views\\mainwindow.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|C:\\4 \u043A\u0443\u0440\u0441\\diplom\\editorbit\\views\\mainwindow.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|solutionrelative:editorbit\\views\\mainwindow.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|C:\\4 \u043A\u0443\u0440\u0441\\diplom\\editorbit\\viewmodels\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|solutionrelative:editorbit\\viewmodels\\mainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|C:\\4 \u043A\u0443\u0440\u0441\\diplom\\editorbit\\viewlocator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|solutionrelative:editorbit\\viewlocator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|C:\\4 \u043A\u0443\u0440\u0441\\diplom\\editorbit\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|solutionrelative:editorbit\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|C:\\4 \u043A\u0443\u0440\u0441\\diplom\\editorbit\\app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|solutionrelative:editorbit\\app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|C:\\4 \u043A\u0443\u0440\u0441\\diplom\\editorbit\\viewmodels\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D3074DA-2567-42C9-9CDF-74031E14BB30}|EditorBit\\EditorBit.csproj|solutionrelative:editorbit\\viewmodels\\viewmodelbase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.axaml.cs",
+              "DocumentMoniker": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\Views\\MainWindow.axaml.cs",
+              "RelativeDocumentMoniker": "EditorBit\\Views\\MainWindow.axaml.cs",
+              "ToolTip": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\Views\\MainWindow.axaml.cs",
+              "RelativeToolTip": "EditorBit\\Views\\MainWindow.axaml.cs",
+              "ViewState": "AQIAAI4AAAAAAAAAAAAkwI0AAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-05T17:05:24.811Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ViewLocator.cs",
+              "DocumentMoniker": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\ViewLocator.cs",
+              "RelativeDocumentMoniker": "EditorBit\\ViewLocator.cs",
+              "ToolTip": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\ViewLocator.cs",
+              "RelativeToolTip": "EditorBit\\ViewLocator.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-05T17:04:10.199Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ViewModelBase.cs",
+              "DocumentMoniker": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\ViewModels\\ViewModelBase.cs",
+              "RelativeDocumentMoniker": "EditorBit\\ViewModels\\ViewModelBase.cs",
+              "ToolTip": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\ViewModels\\ViewModelBase.cs",
+              "RelativeToolTip": "EditorBit\\ViewModels\\ViewModelBase.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-05T17:04:04.996Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.axaml",
+              "DocumentMoniker": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\Views\\MainWindow.axaml",
+              "RelativeDocumentMoniker": "EditorBit\\Views\\MainWindow.axaml",
+              "ToolTip": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\Views\\MainWindow.axaml",
+              "RelativeToolTip": "EditorBit\\Views\\MainWindow.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-01-05T17:03:56.664Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\Program.cs",
+              "RelativeDocumentMoniker": "EditorBit\\Program.cs",
+              "ToolTip": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\Program.cs",
+              "RelativeToolTip": "EditorBit\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-05T17:03:51.273Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainWindowViewModel.cs",
+              "DocumentMoniker": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\ViewModels\\MainWindowViewModel.cs",
+              "RelativeDocumentMoniker": "EditorBit\\ViewModels\\MainWindowViewModel.cs",
+              "ToolTip": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\ViewModels\\MainWindowViewModel.cs",
+              "RelativeToolTip": "EditorBit\\ViewModels\\MainWindowViewModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-05T17:03:47.522Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "App.axaml.cs",
+              "DocumentMoniker": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\App.axaml.cs",
+              "RelativeDocumentMoniker": "EditorBit\\App.axaml.cs",
+              "ToolTip": "C:\\4 \u043A\u0443\u0440\u0441\\diplom\\EditorBit\\App.axaml.cs",
+              "RelativeToolTip": "EditorBit\\App.axaml.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAQwAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-05T17:03:31.886Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

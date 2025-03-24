@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:AvaloniaApplication1.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="AvaloniaApplication1.Views.MainView"
+             x:DataType="vm:MainViewModel">
+
+	<Grid RowDefinitions="Auto, *" ColumnDefinitions="*, 200">
+		<!-- Меню (занимает всю ширину) -->
+		<Menu Grid.Row="0" Grid.ColumnSpan="2">
+			<MenuItem Header="Файл">
+				<MenuItem Header="Открыть файл" Click="LoadFile_Click"/>
+				<MenuItem Header="Открыть новый файл" Click="OpenNewFile_Click"/>
+				<MenuItem Header="Сохранить файл" Click="SaveFile_Click"/>
+				<MenuItem Header="Закрыть файл" Click="CloseFile_Click"/>
+			</MenuItem>
+		</Menu>
+
+		<!-- Основная область (вкладки и инструменты) -->
+		<Grid Grid.Row="1" Grid.Column="0">
+			<TabControl x:Name="TabNavigation"
+                        TabStripPlacement="Top"
+                        MinHeight="15">
+				<TabControl.Resources>
+					<!-- Определяем шаблон для заголовка вкладки -->
+					<DataTemplate x:Key="TabHeaderTemplate">
+						<StackPanel Orientation="Horizontal" Spacing="5">
+							<TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+							<Button Content="X"
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Foreground="Red"
+                                    FontWeight="Bold"
+                                    Padding="2"
+                                    Click="CloseTabButton_Click"
+                                    Tag="{Binding}"/>
+						</StackPanel>
+					</DataTemplate>
+				</TabControl.Resources>
+				<TabControl.ItemTemplate>
+					<DataTemplate>
+						<ContentControl Content="{Binding}" ContentTemplate="{StaticResource TabHeaderTemplate}"/>
+					</DataTemplate>
+				</TabControl.ItemTemplate>
+			</TabControl>
+		</Grid>
+
+		<!-- Панель инструментов -->
+		<StackPanel Grid.Row="1" Grid.Column="1" Background="LightGray" Width="200" Margin="10">
+			<TextBlock Text="Инструменты" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+			<Button x:Name="CropButton" Content="✂" Click="CropButton_Click"/>
+			<Button x:Name="RotateButton" Content="⟳" Click="RotateButton_Click"/>
+		</StackPanel>
+	</Grid>
+</UserControl>
+
+
+
+

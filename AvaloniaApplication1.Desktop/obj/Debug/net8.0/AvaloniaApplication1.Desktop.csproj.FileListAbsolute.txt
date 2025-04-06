@@ -68,3 +68,4 @@ C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\refint\Avalonia
 C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.pdb
 C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.genruntimeconfig.cache
 C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\ref\AvaloniaApplication1.Desktop.dll
+C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.sourcelink.json

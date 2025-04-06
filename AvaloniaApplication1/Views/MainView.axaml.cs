@@ -20,12 +20,13 @@ namespace AvaloniaApplication1.Views
         public class OpenFileData
         {
             public string Name { get; set; }
-            public byte[] Red { get; set; }
-            public byte[] Green { get; set; }
-            public byte[] Blue { get; set; }
+            public ushort[] Red16 { get; set; }  // Используем 16-битные массивы
+            public ushort[] Green16 { get; set; }
+            public ushort[] Blue16 { get; set; }
             public int Width { get; set; }
             public int Height { get; set; }
         }
+
 
         private List<OpenFileData> openFiles = new List<OpenFileData>();
 
@@ -62,32 +63,45 @@ namespace AvaloniaApplication1.Views
 
                 var width = tiff.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
                 var height = tiff.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
-                int totalPixels = width * height;
-                int[] raster = new int[totalPixels];
+                var bitsPerSample = tiff.GetField(TiffTag.BITSPERSAMPLE)[0].ToInt();
+                var samplesPerPixel = tiff.GetField(TiffTag.SAMPLESPERPIXEL)[0].ToInt();
 
-                if (!tiff.ReadRGBAImage(width, height, raster))
+                if (bitsPerSample != 16 || samplesPerPixel < 3)
                 {
-                    Debug.WriteLine("Ошибка чтения данных изображения.");
+                    Debug.WriteLine("Ожидалось 16-битное RGB изображение.");
                     return;
                 }
 
-                var red = new byte[totalPixels];
-                var green = new byte[totalPixels];
-                var blue = new byte[totalPixels];
+                int totalPixels = width * height;
+                ushort[] red16 = new ushort[totalPixels];
+                ushort[] green16 = new ushort[totalPixels];
+                ushort[] blue16 = new ushort[totalPixels];
 
-                for (int i = 0; i < totalPixels; i++)
+                int stride = width * samplesPerPixel * 2; // 2 байта на сэмпл (16 бит)
+
+                byte[] scanline = new byte[stride];
+
+                for (int row = 0; row < height; row++)
                 {
-                    red[i] = (byte)Tiff.GetR(raster[i]);
-                    green[i] = (byte)Tiff.GetG(raster[i]);
-                    blue[i] = (byte)Tiff.GetB(raster[i]);
+                    tiff.ReadScanline(scanline, row);
+                    for (int col = 0; col < width; col++)
+                    {
+                        int pixelIndex = row * width + col;
+                        int baseIndex = col * samplesPerPixel * 2;
+
+                        red16[pixelIndex] = (ushort)((scanline[baseIndex] << 8) | scanline[baseIndex + 1]);
+                        green16[pixelIndex] = (ushort)((scanline[baseIndex + 2] << 8) | scanline[baseIndex + 3]);
+                        blue16[pixelIndex] = (ushort)((scanline[baseIndex + 4] << 8) | scanline[baseIndex + 5]);
+                    }
                 }
 
+                // Сохраняем 16-битные значения без преобразования в 8-битные
                 openFiles.Add(new OpenFileData
                 {
                     Name = Path.GetFileName(filePath),
-                    Red = red,
-                    Green = green,
-                    Blue = blue,
+                    Red16 = red16,  // Изменили поле для 16-битных данных
+                    Green16 = green16,  // Изменили поле для 16-битных данных
+                    Blue16 = blue16,  // Изменили поле для 16-битных данных
                     Width = width,
                     Height = height
                 });
@@ -96,6 +110,7 @@ namespace AvaloniaApplication1.Views
             File.Delete(tempFilePath);
             await LoadImageToControl(openFiles.Last());
         }
+
 
         private async Task LoadImageToControl(OpenFileData fileData)
         {
@@ -202,15 +217,15 @@ namespace AvaloniaApplication1.Views
                             {
                                 int index = row * width + col;
 
-                                // Заполняем буфер для 16-битных данных каждого канала (RGB)
-                                rowBuffer[col * 6] = (byte)(fileData.Red[index] >> 8);    // Красный, старший байт
-                                rowBuffer[col * 6 + 1] = (byte)(fileData.Red[index] & 0xFF); // Красный, младший байт
+                                // Используем 16-битные данные для каждого канала
+                                rowBuffer[col * 6] = (byte)(fileData.Red16[index] >> 8);    // Красный, старший байт
+                                rowBuffer[col * 6 + 1] = (byte)(fileData.Red16[index] & 0xFF); // Красный, младший байт
 
-                                rowBuffer[col * 6 + 2] = (byte)(fileData.Green[index] >> 8);  // Зеленый, старший байт
-                                rowBuffer[col * 6 + 3] = (byte)(fileData.Green[index] & 0xFF); // Зеленый, младший байт
+                                rowBuffer[col * 6 + 2] = (byte)(fileData.Green16[index] >> 8);  // Зеленый, старший байт
+                                rowBuffer[col * 6 + 3] = (byte)(fileData.Green16[index] & 0xFF); // Зеленый, младший байт
 
-                                rowBuffer[col * 6 + 4] = (byte)(fileData.Blue[index] >> 8);   // Синий, старший байт
-                                rowBuffer[col * 6 + 5] = (byte)(fileData.Blue[index] & 0xFF);  // Синий, младший байт
+                                rowBuffer[col * 6 + 4] = (byte)(fileData.Blue16[index] >> 8);   // Синий, старший байт
+                                rowBuffer[col * 6 + 5] = (byte)(fileData.Blue16[index] & 0xFF);  // Синий, младший байт
                             }
 
                             // Запись строки в TIFF
@@ -222,6 +237,7 @@ namespace AvaloniaApplication1.Views
                 }
             }
         }
+
 
 
         private void CloseFile_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -270,7 +286,7 @@ namespace AvaloniaApplication1.Views
         {
             if (TabNavigation.SelectedItem is TabItem tabItem && tabItem.Content is Redactor redactor)
             {
-                redactor.EnableCropping(); 
+                redactor.EnableCropping();
             }
         }
 
@@ -291,9 +307,11 @@ namespace AvaloniaApplication1.Views
                 }
             }
 
-            
+
         }
 
     }
 }
+
+
 

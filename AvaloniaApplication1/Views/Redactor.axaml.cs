@@ -1,4 +1,4 @@
-using Avalonia;
+п»їusing Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -25,9 +25,11 @@ namespace AvaloniaApplication1
         }
 
         public string FileName { get; private set; }
+        private OpenFileData currentFileData;
 
         public void InitializeImage(OpenFileData fileData)
         {
+            currentFileData = fileData;
             FileName = fileData.Name;
             PrintImageChunk(fileData, ImageChu, 0, 0, fileData.Width, fileData.Height);
 
@@ -37,6 +39,7 @@ namespace AvaloniaApplication1
             CenterImage();
         }
 
+
         private void InitializeEventHandlers()
         {
             ImageChu.PointerWheelChanged += ImageChu_PointerWheelChanged;
@@ -45,7 +48,7 @@ namespace AvaloniaApplication1
             ImageCanvas.PointerReleased += ImageCanvas_PointerReleasedCrop;
         }
 
-        #region Маштабирование и Перемещение
+        #region РњР°СЃС€Р°С‚Р±РёСЂРѕРІР°РЅРёСЏ Рё РїРµСЂРµРјРµС‰РµРЅРёРµ
 
 
         private void ImageChu_PointerWheelChanged(object sender, PointerWheelEventArgs e)
@@ -71,7 +74,7 @@ namespace AvaloniaApplication1
             var scaleTransform = new ScaleTransform(currentScale, currentScale);
             ImageChu.RenderTransform = scaleTransform;
 
-            // Обновляем размер Canvas
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Canvas
             ImageCanvas.Width = ImageChu.Source.Size.Width * currentScale;
             ImageCanvas.Height = ImageChu.Source.Size.Height * currentScale;
 
@@ -92,12 +95,12 @@ namespace AvaloniaApplication1
 
         #endregion
 
-        #region Обрезка
+        #region РћР±СЂРµР·РєР°
 
         public void EnableCropping()
         {
             isCropping = true;
-            CropSelection.IsVisible = true; // Показываем элемент
+            CropSelection.IsVisible = true; 
         }
 
         private void ImageCanvas_PointerPressedCrop(object sender, PointerPressedEventArgs e)
@@ -132,168 +135,106 @@ namespace AvaloniaApplication1
             isCropping = false;
 
             CropImage();
-            CropSelection.IsVisible = false; // Скрываем выделение после обрезки
+            CropSelection.IsVisible = false; 
         }
 
         private void CropImage()
         {
-            if (ImageChu.Source is WriteableBitmap sourceBitmap)
+            int x = (int)(CropSelection.Margin.Left / currentScale);
+            int y = (int)(CropSelection.Margin.Top / currentScale);
+            int width = (int)(CropSelection.Width / currentScale);
+            int height = (int)(CropSelection.Height / currentScale);
+
+            if (width <= 0 || height <= 0 ||
+                x + width > currentFileData.Width || y + height > currentFileData.Height) return;
+
+            var red16 = new ushort[width * height];
+            var green16 = new ushort[width * height];
+            var blue16 = new ushort[width * height];
+
+            for (int row = 0; row < height; row++)
             {
-                int sourceWidth = sourceBitmap.PixelSize.Width;
-                int sourceHeight = sourceBitmap.PixelSize.Height;
-
-                // Получаем координаты выделенной области с учётом масштаба
-                int x = (int)(CropSelection.Margin.Left / currentScale);
-                int y = (int)(CropSelection.Margin.Top / currentScale);
-                int width = (int)(CropSelection.Width / currentScale);
-                int height = (int)(CropSelection.Height / currentScale);
-
-                // Убедимся, что размеры валидны
-                if (width <= 0 || height <= 0 || x + width > sourceWidth || y + height > sourceHeight) return;
-
-                // Создаём новый WriteableBitmap для обрезанного изображения
-                var croppedBitmap = new WriteableBitmap(
-                    new PixelSize(width, height),
-                    new Vector(96, 96),
-                    Avalonia.Platform.PixelFormat.Bgra8888); // Используем Bgra8888 для 32-битного цвета
-
-                using (var framebuffer = croppedBitmap.Lock())
-                using (var sourceFrameBuffer = sourceBitmap.Lock())
+                for (int col = 0; col < width; col++)
                 {
-                    unsafe
-                    {
-                        var sourceBuffer = (byte*)sourceFrameBuffer.Address;
-                        var targetBuffer = (byte*)framebuffer.Address;
+                    int srcIndex = (y + row) * currentFileData.Width + (x + col);
+                    int dstIndex = row * width + col;
 
-                        int sourceStride = sourceBitmap.PixelSize.Width * 4; // Страйд для исходного изображения
-                        int targetStride = width * 4; // Страйд для обрезанного изображения
-
-                        // Копируем пиксели из исходного изображения в обрезанное
-                        for (int row = 0; row < height; row++)
-                        {
-                            for (int col = 0; col < width; col++)
-                            {
-                                int sourceIndex = ((y + row) * sourceStride) + ((x + col) * 4);
-                                int targetIndex = (row * targetStride) + (col * 4);
-
-                                // Копируем каждый компонент цвета (BGRA)
-                                targetBuffer[targetIndex] = sourceBuffer[sourceIndex]; // Blue
-                                targetBuffer[targetIndex + 1] = sourceBuffer[sourceIndex + 1]; // Green
-                                targetBuffer[targetIndex + 2] = sourceBuffer[sourceIndex + 2]; // Red
-                                targetBuffer[targetIndex + 3] = sourceBuffer[sourceIndex + 3]; // Alpha
-                            }
-                        }
-                    }
+                    red16[dstIndex] = currentFileData.Red16[srcIndex];
+                    green16[dstIndex] = currentFileData.Green16[srcIndex];
+                    blue16[dstIndex] = currentFileData.Blue16[srcIndex];
                 }
-
-                // Обновляем изображение в редакторе
-                ImageChu.Source = croppedBitmap;
-
-                // Обновляем размер канваса и позицию изображения
-                ImageCanvas.Width = width;
-                ImageCanvas.Height = height;
-                Canvas.SetLeft(ImageChu, 0);
-                Canvas.SetTop(ImageChu, 0);
             }
+
+            currentFileData = new OpenFileData
+            {
+                Name = FileName,
+                Width = width,
+                Height = height,
+                Red16 = red16,
+                Green16 = green16,
+                Blue16 = blue16
+            };
+
+            PrintImageChunk(currentFileData, ImageChu, 0, 0, width, height);
+            ImageCanvas.Width = width;
+            ImageCanvas.Height = height;
+            Canvas.SetLeft(ImageChu, 0);
+            Canvas.SetTop(ImageChu, 0);
         }
+
 
         #endregion
 
-        #region Поворот
+        #region РџРѕРІРѕСЂРѕС‚
         public void RotateImage(double angle)
         {
-            if (ImageChu.Source is WriteableBitmap sourceBitmap)
+            int oldWidth = currentFileData.Width;
+            int oldHeight = currentFileData.Height;
+
+            int newWidth = oldHeight;
+            int newHeight = oldWidth;
+
+            var red16 = new ushort[newWidth * newHeight];
+            var green16 = new ushort[newWidth * newHeight];
+            var blue16 = new ushort[newWidth * newHeight];
+
+            for (int y = 0; y < oldHeight; y++)
             {
-                var newBitmap = new WriteableBitmap(
-                    new PixelSize(sourceBitmap.PixelSize.Height, sourceBitmap.PixelSize.Width),
-                    new Vector(96, 96),
-                    Avalonia.Platform.PixelFormat.Bgra8888);
-
-                using (var framebuffer = newBitmap.Lock())
-                using (var sourceFrameBuffer = sourceBitmap.Lock())
+                for (int x = 0; x < oldWidth; x++)
                 {
-                    unsafe
-                    {
-                        var sourceBuffer = (byte*)sourceFrameBuffer.Address;
-                        var targetBuffer = (byte*)framebuffer.Address;
+                    int oldIndex = y * oldWidth + x;
+                    int newX = y;
+                    int newY = newHeight - x - 1;
+                    int newIndex = newY * newWidth + newX;
 
-                        int sourceWidth = sourceBitmap.PixelSize.Width;
-                        int sourceHeight = sourceBitmap.PixelSize.Height;
-                        int sourceStride = sourceWidth * 4;
-                        int targetStride = sourceHeight * 4;
-
-                        for (int y = 0; y < sourceHeight; y++)
-                        {
-                            for (int x = 0; x < sourceWidth; x++)
-                            {
-                                int sourceIndex = (y * sourceStride) + (x * 4);
-                                int targetIndex = ((x * targetStride) + ((sourceHeight - y - 1) * 4));
-
-                                targetBuffer[targetIndex] = sourceBuffer[sourceIndex]; // Blue
-                                targetBuffer[targetIndex + 1] = sourceBuffer[sourceIndex + 1]; // Green
-                                targetBuffer[targetIndex + 2] = sourceBuffer[sourceIndex + 2]; // Red
-                                targetBuffer[targetIndex + 3] = sourceBuffer[sourceIndex + 3]; // Alpha
-                            }
-                        }
-                    }
+                    red16[newIndex] = currentFileData.Red16[oldIndex];
+                    green16[newIndex] = currentFileData.Green16[oldIndex];
+                    blue16[newIndex] = currentFileData.Blue16[oldIndex];
                 }
-
-                ImageChu.Source = newBitmap;
-                ImageCanvas.Width = newBitmap.PixelSize.Width;
-                ImageCanvas.Height = newBitmap.PixelSize.Height;
-                CenterImage();
             }
+
+            currentFileData = new OpenFileData
+            {
+                Name = FileName,
+                Width = newWidth,
+                Height = newHeight,
+                Red16 = red16,
+                Green16 = green16,
+                Blue16 = blue16
+            };
+
+            PrintImageChunk(currentFileData, ImageChu, 0, 0, newWidth, newHeight);
+            ImageCanvas.Width = newWidth;
+            ImageCanvas.Height = newHeight;
+            CenterImage();
         }
+
 
         public OpenFileData GetCurrentImageData()
         {
-            if (ImageChu.Source is WriteableBitmap writeableBitmap)
-            {
-                int width = writeableBitmap.PixelSize.Width;
-                int height = writeableBitmap.PixelSize.Height;
-                int totalPixels = width * height;
-
-                byte[] red = new byte[totalPixels];
-                byte[] green = new byte[totalPixels];
-                byte[] blue = new byte[totalPixels];
-
-                // Читаем пиксели из WriteableBitmap
-                using (var fb = writeableBitmap.Lock())
-                {
-                    IntPtr buffer = fb.Address;
-                    int stride = fb.RowBytes;
-
-                    unsafe
-                    {
-                        byte* ptr = (byte*)buffer;
-                        for (int y = 0; y < height; y++)
-                        {
-                            for (int x = 0; x < width; x++)
-                            {
-                                int index = y * width + x;
-                                int pixelIndex = y * stride + x * 4;
-
-                                blue[index] = ptr[pixelIndex];      // B
-                                green[index] = ptr[pixelIndex + 1]; // G
-                                red[index] = ptr[pixelIndex + 2];   // R
-                            }
-                        }
-                    }
-                }
-
-                return new OpenFileData
-                {
-                    Name = FileName,
-                    Red = red,
-                    Green = green,
-                    Blue = blue,
-                    Width = width,
-                    Height = height
-                };
-            }
-
-            return null;
+            return currentFileData;
         }
+
 
         #endregion
 
@@ -310,33 +251,60 @@ namespace AvaloniaApplication1
                 {
                     var buffer = (uint*)framebuffer.Address;
 
+                    int totalPixels = file.Width * file.Height;
+
+                    ushort[] r16 = file.Red16;
+                    ushort[] g16 = file.Green16;
+                    ushort[] b16 = file.Blue16;
+
+                    // Р’С‹С‡РёСЃР»СЏРµРј min Рё max РґР»СЏ Р°РІС‚РѕРєРѕРЅС‚СЂР°СЃС‚Р°
+                    ushort minR = ushort.MaxValue, maxR = ushort.MinValue;
+                    ushort minG = ushort.MaxValue, maxG = ushort.MinValue;
+                    ushort minB = ushort.MaxValue, maxB = ushort.MinValue;
+
+                    for (int i = 0; i < totalPixels; i++)
+                    {
+                        if (r16[i] < minR) minR = r16[i];
+                        if (r16[i] > maxR) maxR = r16[i];
+                        if (g16[i] < minG) minG = g16[i];
+                        if (g16[i] > maxG) maxG = g16[i];
+                        if (b16[i] < minB) minB = b16[i];
+                        if (b16[i] > maxB) maxB = b16[i];
+                    }
+
+                    double rangeR = maxR - minR;
+                    double rangeG = maxG - minG;
+                    double rangeB = maxB - minB;
+
                     for (int y = 0; y < chunkHeight; y++)
                     {
                         for (int x = 0; x < chunkWidth; x++)
                         {
-                            int index = (chunkY + y) * chunkWidth + chunkX + x;
+                            int srcX = chunkX + x;
+                            int srcY = chunkY + y;
 
-                            if (index >= 0 && index < chunkWidth * chunkHeight)
-                            {
-                                var currentFileData = file;
-                                byte r = currentFileData.Red[index];
-                                byte g = currentFileData.Green[index];
-                                byte b = currentFileData.Blue[index];
-                                byte a = 255;
-
-                                buffer[y * chunkWidth + x] = (uint)(a << 24 | b << 16 | g << 8 | r);
-                            }
-                            else
+                            if (srcX >= file.Width || srcY >= file.Height)
                             {
                                 buffer[y * chunkWidth + x] = 0xFF000000;
+                                continue;
                             }
+
+                            int index = srcY * file.Width + srcX;
+
+                            byte r = (byte)(((r16[index] - minR) / rangeR) * 255.0);
+                            byte g = (byte)(((g16[index] - minG) / rangeG) * 255.0);
+                            byte b = (byte)(((b16[index] - minB) / rangeB) * 255.0);
+                            byte a = 255;
+
+                            buffer[y * chunkWidth + x] = (uint)(a << 24 | b << 16 | g << 8 | r);
                         }
                     }
                 }
             }
 
             imageControl.Source = bitmap;
-            UpdateScale(); // Устанавливаем начальный масштаб
+            UpdateScale();
         }
+
     }
 }

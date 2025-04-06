@@ -12,3 +12,4 @@ C:\project_archive\AvaloniaApplication1\bin\Debug\net8.0\AvaloniaApplication1.de
 C:\project_archive\AvaloniaApplication1\bin\Debug\net8.0\AvaloniaApplication1.dll
 C:\project_archive\AvaloniaApplication1\bin\Debug\net8.0\AvaloniaApplication1.pdb
 C:\project_archive\AvaloniaApplication1\obj\Debug\net8.0\ref\AvaloniaApplication1.dll
+C:\project_archive\AvaloniaApplication1\obj\Debug\net8.0\AvaloniaApplication1.sourcelink.json

@@ -78,8 +78,15 @@ namespace AvaloniaApplication1.Views
                 ushort[] blue16 = new ushort[totalPixels];
 
                 int stride = width * samplesPerPixel * 2; // 2 байта на сэмпл (16 бит)
-
                 byte[] scanline = new byte[stride];
+                bool isBigEndian = tiff.IsBigEndian();
+
+                ushort ReadUShort(byte[] buffer, int index)
+                {
+                    return isBigEndian
+                        ? (ushort)((buffer[index] << 8) | buffer[index + 1])
+                        : (ushort)((buffer[index + 1] << 8) | buffer[index]);
+                }
 
                 for (int row = 0; row < height; row++)
                 {
@@ -89,9 +96,9 @@ namespace AvaloniaApplication1.Views
                         int pixelIndex = row * width + col;
                         int baseIndex = col * samplesPerPixel * 2;
 
-                        red16[pixelIndex] = (ushort)((scanline[baseIndex] << 8) | scanline[baseIndex + 1]);
-                        green16[pixelIndex] = (ushort)((scanline[baseIndex + 2] << 8) | scanline[baseIndex + 3]);
-                        blue16[pixelIndex] = (ushort)((scanline[baseIndex + 4] << 8) | scanline[baseIndex + 5]);
+                        red16[pixelIndex] = ReadUShort(scanline, baseIndex);
+                        green16[pixelIndex] = ReadUShort(scanline, baseIndex + 2);
+                        blue16[pixelIndex] = ReadUShort(scanline, baseIndex + 4);
                     }
                 }
 
@@ -99,9 +106,9 @@ namespace AvaloniaApplication1.Views
                 openFiles.Add(new OpenFileData
                 {
                     Name = Path.GetFileName(filePath),
-                    Red16 = red16,  // Изменили поле для 16-битных данных
-                    Green16 = green16,  // Изменили поле для 16-битных данных
-                    Blue16 = blue16,  // Изменили поле для 16-битных данных
+                    Red16 = red16,
+                    Green16 = green16,
+                    Blue16 = blue16,
                     Width = width,
                     Height = height
                 });
@@ -111,29 +118,26 @@ namespace AvaloniaApplication1.Views
             await LoadImageToControl(openFiles.Last());
         }
 
-
         private async Task LoadImageToControl(OpenFileData fileData)
         {
             Redactor redactor = new Redactor();
             redactor.InitializeImage(fileData);
 
-            // Создаём TabItem, где Header – это строка (имя файла),
-            // и благодаря HeaderTemplate будет сформирован кастомный заголовок с кнопкой "X"
             var tabItem = new TabItem
             {
                 Header = fileData.Name,
-                HeaderTemplate = (DataTemplate)TabNavigation.Resources["TabHeaderTemplate"], // Добавлено
+                HeaderTemplate = (DataTemplate)TabNavigation.Resources["TabHeaderTemplate"],
                 Content = redactor,
                 BorderThickness = Thickness.Parse("0 0 1 0"),
                 BorderBrush = Brushes.Black,
                 Padding = new Thickness(0, 3, 0, 0),
             };
 
-            // Добавляем вкладку в UI-потоке
             Dispatcher.UIThread.Post(() => TabNavigation.Items.Add(tabItem));
         }
 
         #endregion OpenFile
+
 
         #region КнопкиМеню
         private async void LoadFile_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -184,61 +188,61 @@ namespace AvaloniaApplication1.Views
                 var result = await saveDialog.ShowAsync((Window)this.VisualRoot);
                 if (string.IsNullOrEmpty(result)) return;
 
-                if (redactor.ImageChu.Source is WriteableBitmap writeableBitmap)
+                // Получаем актуальные данные из редактора
+                var currentData = redactor.GetCurrentImageData();
+                if (currentData == null)
                 {
-                    int width = writeableBitmap.PixelSize.Width;
-                    int height = writeableBitmap.PixelSize.Height;
-                    int totalPixels = width * height;
+                    Debug.WriteLine("Не удалось получить данные изображения из редактора.");
+                    return;
+                }
 
-                    // Открываем файл для записи в TIFF с 16 битами
-                    using (var tiff = Tiff.Open(result, "w"))
+                int width = currentData.Width;
+                int height = currentData.Height;
+
+                // Открываем файл для записи в TIFF с 16 битами
+                using (var tiff = Tiff.Open(result, "w"))
+                {
+                    if (tiff == null)
                     {
-                        if (tiff == null)
+                        Debug.WriteLine("Не удалось создать TIFF файл.");
+                        return;
+                    }
+
+                    tiff.SetField(TiffTag.IMAGEWIDTH, width);
+                    tiff.SetField(TiffTag.IMAGELENGTH, height);
+                    tiff.SetField(TiffTag.SAMPLESPERPIXEL, 3);  // 3 компонента на пиксель (RGB)
+                    tiff.SetField(TiffTag.BITSPERSAMPLE, 16);  // 16 бит на канал
+                    tiff.SetField(TiffTag.PHOTOMETRIC, Photometric.RGB);
+                    tiff.SetField(TiffTag.COMPRESSION, Compression.NONE);
+                    tiff.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
+                    tiff.SetField(TiffTag.ROWSPERSTRIP, height);
+
+                    // Буфер для записи строки данных
+                    byte[] rowBuffer = new byte[width * 6];  // 6 байтов на пиксель (16 бит на канал для RGB)
+
+                    for (int row = 0; row < height; row++)
+                    {
+                        for (int col = 0; col < width; col++)
                         {
-                            Debug.WriteLine("Не удалось создать TIFF файл.");
-                            return;
+                            int index = row * width + col;
+
+                            // Запись 16-битных данных для каждого канала
+                            rowBuffer[col * 6] = (byte)(currentData.Red16[index] >> 8);    // Красный, старший байт
+                            rowBuffer[col * 6 + 1] = (byte)(currentData.Red16[index] & 0xFF); // Красный, младший байт
+
+                            rowBuffer[col * 6 + 2] = (byte)(currentData.Green16[index] >> 8);  // Зеленый, старший байт
+                            rowBuffer[col * 6 + 3] = (byte)(currentData.Green16[index] & 0xFF); // Зеленый, младший байт
+
+                            rowBuffer[col * 6 + 4] = (byte)(currentData.Blue16[index] >> 8);   // Синий, старший байт
+                            rowBuffer[col * 6 + 5] = (byte)(currentData.Blue16[index] & 0xFF);  // Синий, младший байт
                         }
 
-                        tiff.SetField(TiffTag.IMAGEWIDTH, width);
-                        tiff.SetField(TiffTag.IMAGELENGTH, height);
-                        tiff.SetField(TiffTag.SAMPLESPERPIXEL, 3);  // 3 компонента на пиксель (RGB)
-                        tiff.SetField(TiffTag.BITSPERSAMPLE, 16);  // 16 бит на канал
-                        tiff.SetField(TiffTag.PHOTOMETRIC, Photometric.RGB);
-                        tiff.SetField(TiffTag.COMPRESSION, Compression.NONE);
-                        tiff.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
-                        tiff.SetField(TiffTag.ROWSPERSTRIP, height);
-
-                        // Буфер для записи строки данных
-                        byte[] rowBuffer = new byte[width * 6];  // 6 байтов на пиксель (16 бит на канал для RGB)
-
-                        for (int row = height - 1; row >= 0; row--)
-                        {
-                            for (int col = 0; col < width; col++)
-                            {
-                                int index = row * width + col;
-
-                                // Используем 16-битные данные для каждого канала
-                                rowBuffer[col * 6] = (byte)(fileData.Red16[index] >> 8);    // Красный, старший байт
-                                rowBuffer[col * 6 + 1] = (byte)(fileData.Red16[index] & 0xFF); // Красный, младший байт
-
-                                rowBuffer[col * 6 + 2] = (byte)(fileData.Green16[index] >> 8);  // Зеленый, старший байт
-                                rowBuffer[col * 6 + 3] = (byte)(fileData.Green16[index] & 0xFF); // Зеленый, младший байт
-
-                                rowBuffer[col * 6 + 4] = (byte)(fileData.Blue16[index] >> 8);   // Синий, старший байт
-                                rowBuffer[col * 6 + 5] = (byte)(fileData.Blue16[index] & 0xFF);  // Синий, младший байт
-                            }
-
-                            // Запись строки в TIFF
-                            tiff.WriteScanline(rowBuffer, height - row - 1);
-                        }
-
-                        tiff.Close();
+                        // Запись строки в TIFF
+                        tiff.WriteScanline(rowBuffer, row);
                     }
                 }
             }
         }
-
-
 
         private void CloseFile_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
@@ -312,6 +316,3 @@ namespace AvaloniaApplication1.Views
 
     }
 }
-
-
-

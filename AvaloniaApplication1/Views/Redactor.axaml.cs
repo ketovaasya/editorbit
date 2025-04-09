@@ -4,6 +4,7 @@ using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using System;
+using System.Linq;
 using static AvaloniaApplication1.Views.MainView;
 
 namespace AvaloniaApplication1
@@ -26,19 +27,45 @@ namespace AvaloniaApplication1
 
         public string FileName { get; private set; }
         private OpenFileData currentFileData;
+        private ushort[] currentRed16;
+        private ushort[] currentGreen16;
+        private ushort[] currentBlue16;
+        private int currentWidth;
+        private int currentHeight;
 
         public void InitializeImage(OpenFileData fileData)
         {
             currentFileData = fileData;
             FileName = fileData.Name;
-            PrintImageChunk(fileData, ImageChu, 0, 0, fileData.Width, fileData.Height);
 
-            ImageCanvas.Width = fileData.Width;
-            ImageCanvas.Height = fileData.Height;
+            // Сохраняем оригинальные данные без изменений
+            currentRed16 = fileData.Red16.ToArray(); // Копируем массивы
+            currentGreen16 = fileData.Green16.ToArray();
+            currentBlue16 = fileData.Blue16.ToArray();
+            currentWidth = fileData.Width;
+            currentHeight = fileData.Height;
 
-            CenterImage();
+            // Для отображения создаем копию с нормализацией
+            DisplayImage();
         }
 
+        private void DisplayImage()
+        {
+            var displayData = new OpenFileData
+            {
+                Name = FileName,
+                Width = currentWidth,
+                Height = currentHeight,
+                Red16 = currentRed16,
+                Green16 = currentGreen16,
+                Blue16 = currentBlue16
+            };
+
+            PrintImageChunk(displayData, ImageChu, 0, 0, currentWidth, currentHeight);
+            ImageCanvas.Width = currentWidth;
+            ImageCanvas.Height = currentHeight;
+            CenterImage();
+        }
 
         private void InitializeEventHandlers()
         {
@@ -48,8 +75,7 @@ namespace AvaloniaApplication1
             ImageCanvas.PointerReleased += ImageCanvas_PointerReleasedCrop;
         }
 
-        #region Масшатбирования и перемещение
-
+        #region Масштабирование и перемещение
 
         private void ImageChu_PointerWheelChanged(object sender, PointerWheelEventArgs e)
         {
@@ -74,7 +100,6 @@ namespace AvaloniaApplication1
             var scaleTransform = new ScaleTransform(currentScale, currentScale);
             ImageChu.RenderTransform = scaleTransform;
 
-            // ��������� ������ Canvas
             ImageCanvas.Width = ImageChu.Source.Size.Width * currentScale;
             ImageCanvas.Height = ImageChu.Source.Size.Height * currentScale;
 
@@ -100,7 +125,7 @@ namespace AvaloniaApplication1
         public void EnableCropping()
         {
             isCropping = true;
-            CropSelection.IsVisible = true; 
+            CropSelection.IsVisible = true;
         }
 
         private void ImageCanvas_PointerPressedCrop(object sender, PointerPressedEventArgs e)
@@ -133,9 +158,8 @@ namespace AvaloniaApplication1
             if (!isCropping) return;
 
             isCropping = false;
-
             CropImage();
-            CropSelection.IsVisible = false; 
+            CropSelection.IsVisible = false;
         }
 
         private void CropImage()
@@ -146,7 +170,7 @@ namespace AvaloniaApplication1
             int height = (int)(CropSelection.Height / currentScale);
 
             if (width <= 0 || height <= 0 ||
-                x + width > currentFileData.Width || y + height > currentFileData.Height) return;
+                x + width > currentWidth || y + height > currentHeight) return;
 
             var red16 = new ushort[width * height];
             var green16 = new ushort[width * height];
@@ -156,16 +180,24 @@ namespace AvaloniaApplication1
             {
                 for (int col = 0; col < width; col++)
                 {
-                    int srcIndex = (y + row) * currentFileData.Width + (x + col);
+                    int srcIndex = (y + row) * currentWidth + (x + col);
                     int dstIndex = row * width + col;
 
-                    red16[dstIndex] = currentFileData.Red16[srcIndex];
-                    green16[dstIndex] = currentFileData.Green16[srcIndex];
-                    blue16[dstIndex] = currentFileData.Blue16[srcIndex];
+                    red16[dstIndex] = currentRed16[srcIndex];
+                    green16[dstIndex] = currentGreen16[srcIndex];
+                    blue16[dstIndex] = currentBlue16[srcIndex];
                 }
             }
 
-            currentFileData = new OpenFileData
+            // Обновляем текущие данные
+            currentRed16 = red16;
+            currentGreen16 = green16;
+            currentBlue16 = blue16;
+            currentWidth = width;
+            currentHeight = height;
+
+            // Обновляем отображение
+            var updatedData = new OpenFileData
             {
                 Name = FileName,
                 Width = width,
@@ -175,21 +207,21 @@ namespace AvaloniaApplication1
                 Blue16 = blue16
             };
 
-            PrintImageChunk(currentFileData, ImageChu, 0, 0, width, height);
+            PrintImageChunk(updatedData, ImageChu, 0, 0, width, height);
             ImageCanvas.Width = width;
             ImageCanvas.Height = height;
             Canvas.SetLeft(ImageChu, 0);
             Canvas.SetTop(ImageChu, 0);
         }
 
-
         #endregion
 
         #region Поворот
+
         public void RotateImage(double angle)
         {
-            int oldWidth = currentFileData.Width;
-            int oldHeight = currentFileData.Height;
+            int oldWidth = currentWidth;
+            int oldHeight = currentHeight;
 
             int newWidth = oldHeight;
             int newHeight = oldWidth;
@@ -207,13 +239,21 @@ namespace AvaloniaApplication1
                     int newY = newHeight - x - 1;
                     int newIndex = newY * newWidth + newX;
 
-                    red16[newIndex] = currentFileData.Red16[oldIndex];
-                    green16[newIndex] = currentFileData.Green16[oldIndex];
-                    blue16[newIndex] = currentFileData.Blue16[oldIndex];
+                    red16[newIndex] = currentRed16[oldIndex];
+                    green16[newIndex] = currentGreen16[oldIndex];
+                    blue16[newIndex] = currentBlue16[oldIndex];
                 }
             }
 
-            currentFileData = new OpenFileData
+            // Обновляем текущие данные
+            currentRed16 = red16;
+            currentGreen16 = green16;
+            currentBlue16 = blue16;
+            currentWidth = newWidth;
+            currentHeight = newHeight;
+
+            // Обновляем отображение
+            var updatedData = new OpenFileData
             {
                 Name = FileName,
                 Width = newWidth,
@@ -223,18 +263,24 @@ namespace AvaloniaApplication1
                 Blue16 = blue16
             };
 
-            PrintImageChunk(currentFileData, ImageChu, 0, 0, newWidth, newHeight);
+            PrintImageChunk(updatedData, ImageChu, 0, 0, newWidth, newHeight);
             ImageCanvas.Width = newWidth;
             ImageCanvas.Height = newHeight;
             CenterImage();
         }
 
-
         public OpenFileData GetCurrentImageData()
         {
-            return currentFileData;
+            return new OpenFileData
+            {
+                Name = this.FileName,
+                Red16 = this.currentRed16,
+                Green16 = this.currentGreen16,
+                Blue16 = this.currentBlue16,
+                Width = this.currentWidth,
+                Height = this.currentHeight
+            };
         }
-
 
         #endregion
 
@@ -250,31 +296,23 @@ namespace AvaloniaApplication1
                 unsafe
                 {
                     var buffer = (uint*)framebuffer.Address;
-
                     int totalPixels = file.Width * file.Height;
 
                     ushort[] r16 = file.Red16;
                     ushort[] g16 = file.Green16;
                     ushort[] b16 = file.Blue16;
 
-                    // Вычисляем min и max для автоконтраста
-                    ushort minR = ushort.MaxValue, maxR = ushort.MinValue;
-                    ushort minG = ushort.MaxValue, maxG = ushort.MinValue;
-                    ushort minB = ushort.MaxValue, maxB = ushort.MinValue;
+                    // Автоматическое контрастирование для отображения
+                    ushort minR = r16.Min();
+                    ushort maxR = r16.Max();
+                    ushort minG = g16.Min();
+                    ushort maxG = g16.Max();
+                    ushort minB = b16.Min();
+                    ushort maxB = b16.Max();
 
-                    for (int i = 0; i < totalPixels; i++)
-                    {
-                        if (r16[i] < minR) minR = r16[i];
-                        if (r16[i] > maxR) maxR = r16[i];
-                        if (g16[i] < minG) minG = g16[i];
-                        if (g16[i] > maxG) maxG = g16[i];
-                        if (b16[i] < minB) minB = b16[i];
-                        if (b16[i] > maxB) maxB = b16[i];
-                    }
-
-                    double rangeR = maxR - minR;
-                    double rangeG = maxG - minG;
-                    double rangeB = maxB - minB;
+                    double rangeR = Math.Max(1, maxR - minR);
+                    double rangeG = Math.Max(1, maxG - minG);
+                    double rangeB = Math.Max(1, maxB - minB);
 
                     for (int y = 0; y < chunkHeight; y++)
                     {
@@ -291,12 +329,12 @@ namespace AvaloniaApplication1
 
                             int index = srcY * file.Width + srcX;
 
-                            byte r = (byte)(((r16[index] - minR) / rangeR) * 255.0);
-                            byte g = (byte)(((g16[index] - minG) / rangeG) * 255.0);
-                            byte b = (byte)(((b16[index] - minB) / rangeB) * 255.0);
-                            byte a = 255;
+                            // Нормализация только для отображения
+                            byte r = (byte)((r16[index] - minR) * 255 / rangeR);
+                            byte g = (byte)((g16[index] - minG) * 255 / rangeG);
+                            byte b = (byte)((b16[index] - minB) * 255 / rangeB);
 
-                            buffer[y * chunkWidth + x] = (uint)(a << 24 | b << 16 | g << 8 | r);
+                            buffer[y * chunkWidth + x] = (uint)(255 << 24 | b << 16 | g << 8 | r);
                         }
                     }
                 }
@@ -305,6 +343,5 @@ namespace AvaloniaApplication1
             imageControl.Source = bitmap;
             UpdateScale();
         }
-
     }
 }

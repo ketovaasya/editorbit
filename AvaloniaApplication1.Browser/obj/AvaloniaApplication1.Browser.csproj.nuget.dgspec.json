@@ -73,6 +73,10 @@
               "target": "Package",
               "version": "[9.0.1, )",
               "autoReferenced": true
+            },
+            "SkiaSharp": {
+              "target": "Package",
+              "version": "[3.116.1, )"
             }
           },
           "imports": [
@@ -175,6 +179,10 @@
             "CommunityToolkit.Mvvm": {
               "target": "Package",
               "version": "[8.2.0, )"
+            },
+            "SkiaSharp": {
+              "target": "Package",
+              "version": "[3.116.1, )"
             }
           },
           "imports": [

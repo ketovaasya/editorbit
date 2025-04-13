@@ -4,7 +4,7 @@
 	<ScrollViewer x:Name="ScrollContainer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
 		<Canvas x:Name="ImageCanvas">
 			<Image x:Name="ImageChu" Stretch="Uniform" RenderTransformOrigin="0.5,0.5"/>
-			<Rectangle x:Name="CropSelection" Stroke="Red" StrokeThickness="2" Fill="Transparent" IsVisible="True"/>
+			<Rectangle x:Name="CropSelection" Stroke="Red" StrokeThickness="2" Fill="Transparent" IsVisible="False"/>
 		</Canvas>
 	</ScrollViewer>
 </UserControl>

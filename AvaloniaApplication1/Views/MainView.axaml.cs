@@ -12,6 +12,10 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.Markup.Xaml.Templates;
 using Avalonia.Interactivity;
+using System;
+using static System.Net.Mime.MediaTypeNames;
+using SkiaSharp;
+using System.Runtime.InteropServices;
 
 namespace AvaloniaApplication1.Views
 {
@@ -33,7 +37,7 @@ namespace AvaloniaApplication1.Views
         public MainView()
         {
             InitializeComponent();
-            Buffer.MainControl = this;
+            Project.Classes.Buffer.MainControl = this;
         }
 
         #region OpenFile
@@ -188,7 +192,6 @@ namespace AvaloniaApplication1.Views
                 var result = await saveDialog.ShowAsync((Window)this.VisualRoot);
                 if (string.IsNullOrEmpty(result)) return;
 
-                // Получаем актуальные данные из редактора
                 var currentData = redactor.GetCurrentImageData();
                 if (currentData == null)
                 {
@@ -199,7 +202,6 @@ namespace AvaloniaApplication1.Views
                 int width = currentData.Width;
                 int height = currentData.Height;
 
-                // Открываем файл для записи в TIFF с 16 битами
                 using (var tiff = Tiff.Open(result, "w"))
                 {
                     if (tiff == null)
@@ -208,17 +210,19 @@ namespace AvaloniaApplication1.Views
                         return;
                     }
 
+                    // Устанавливаем параметры изображения
                     tiff.SetField(TiffTag.IMAGEWIDTH, width);
                     tiff.SetField(TiffTag.IMAGELENGTH, height);
-                    tiff.SetField(TiffTag.SAMPLESPERPIXEL, 3);  // 3 компонента на пиксель (RGB)
-                    tiff.SetField(TiffTag.BITSPERSAMPLE, 16);  // 16 бит на канал
+                    tiff.SetField(TiffTag.SAMPLESPERPIXEL, 3);        // RGB
+                    tiff.SetField(TiffTag.BITSPERSAMPLE, 16);         // 16 бит на канал
                     tiff.SetField(TiffTag.PHOTOMETRIC, Photometric.RGB);
                     tiff.SetField(TiffTag.COMPRESSION, Compression.NONE);
                     tiff.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
                     tiff.SetField(TiffTag.ROWSPERSTRIP, height);
+                    //tiff.SetField(TiffTag.FILLORDER, FillOrder.MSB2LSB); // Важно! Устанавливаем порядок байтов явно
+                    tiff.SetField(TiffTag.SAMPLEFORMAT, SampleFormat.UINT);
 
-                    // Буфер для записи строки данных
-                    byte[] rowBuffer = new byte[width * 6];  // 6 байтов на пиксель (16 бит на канал для RGB)
+                    byte[] rowBuffer = new byte[width * 6]; // 3 канала * 2 байта на канал
 
                     for (int row = 0; row < height; row++)
                     {
@@ -226,24 +230,40 @@ namespace AvaloniaApplication1.Views
                         {
                             int index = row * width + col;
 
-                            // Запись 16-битных данных для каждого канала
-                            rowBuffer[col * 6] = (byte)(currentData.Red16[index] >> 8);    // Красный, старший байт
-                            rowBuffer[col * 6 + 1] = (byte)(currentData.Red16[index] & 0xFF); // Красный, младший байт
+                            if (BitConverter.IsLittleEndian)
+                            {
+                                // Для little-endian: сначала младший байт, потом старший
+                                rowBuffer[col * 6] = (byte)(currentData.Red16[index] & 0xFF);
+                                rowBuffer[col * 6 + 1] = (byte)(currentData.Red16[index] >> 8);
 
-                            rowBuffer[col * 6 + 2] = (byte)(currentData.Green16[index] >> 8);  // Зеленый, старший байт
-                            rowBuffer[col * 6 + 3] = (byte)(currentData.Green16[index] & 0xFF); // Зеленый, младший байт
+                                rowBuffer[col * 6 + 2] = (byte)(currentData.Green16[index] & 0xFF);
+                                rowBuffer[col * 6 + 3] = (byte)(currentData.Green16[index] >> 8);
 
-                            rowBuffer[col * 6 + 4] = (byte)(currentData.Blue16[index] >> 8);   // Синий, старший байт
-                            rowBuffer[col * 6 + 5] = (byte)(currentData.Blue16[index] & 0xFF);  // Синий, младший байт
+                                rowBuffer[col * 6 + 4] = (byte)(currentData.Blue16[index] & 0xFF);
+                                rowBuffer[col * 6 + 5] = (byte)(currentData.Blue16[index] >> 8);
+                            }
+                            else
+                            {
+                                // Для big-endian — как в оригинальном коде (старший байт вперед)
+                                rowBuffer[col * 6] = (byte)(currentData.Red16[index] >> 8);
+                                rowBuffer[col * 6 + 1] = (byte)(currentData.Red16[index] & 0xFF);
+
+                                rowBuffer[col * 6 + 2] = (byte)(currentData.Green16[index] >> 8);
+                                rowBuffer[col * 6 + 3] = (byte)(currentData.Green16[index] & 0xFF);
+
+                                rowBuffer[col * 6 + 4] = (byte)(currentData.Blue16[index] >> 8);
+                                rowBuffer[col * 6 + 5] = (byte)(currentData.Blue16[index] & 0xFF);
+                            }
                         }
-
-                        // Запись строки в TIFF
                         tiff.WriteScanline(rowBuffer, row);
                     }
+
                 }
             }
         }
+        #endregion КнопкиМеню
 
+        #region Закрытие
         private void CloseFile_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             if (TabNavigation.SelectedItem is TabItem tabItem)
@@ -252,7 +272,7 @@ namespace AvaloniaApplication1.Views
             }
         }
 
-        #endregion КнопкиМеню
+
 
         private void CloseTabButton_Click(object sender, RoutedEventArgs e)
         {
@@ -285,6 +305,7 @@ namespace AvaloniaApplication1.Views
                 }
             }
         }
+        #endregion Закрытие
 
         private void CropButton_Click(object? sender, RoutedEventArgs e)
         {
@@ -310,9 +331,198 @@ namespace AvaloniaApplication1.Views
                     openFiles.Add(updatedData);
                 }
             }
-
-
         }
 
+        #region Save8bit
+        private async void SaveFile8bit_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabNavigation.SelectedItem is TabItem tabItem && tabItem.Content is Redactor redactor)
+            {
+                var fileData = openFiles.FirstOrDefault(f => f.Name == redactor.FileName);
+                if (fileData == null)
+                {
+                    Debug.WriteLine("Файл не найден в списке.");
+                    return;
+                }
+
+                var saveDialog = new SaveFileDialog
+                {
+                    DefaultExtension = "tiff",
+                    Filters = new List<FileDialogFilter>
+            {
+                new FileDialogFilter { Name = "TIFF Images", Extensions = { "tiff", "tif" } }
+            }
+                };
+
+                var result = await saveDialog.ShowAsync((Window)this.VisualRoot);
+                if (string.IsNullOrEmpty(result)) return;
+
+                var currentData = redactor.GetCurrentImageData();
+                if (currentData == null)
+                {
+                    Debug.WriteLine("Не удалось получить данные изображения из редактора.");
+                    return;
+                }
+
+                int width = currentData.Width;
+                int height = currentData.Height;
+
+                using (var tiff = Tiff.Open(result, "w"))
+                {
+                    if (tiff == null)
+                    {
+                        Debug.WriteLine("Не удалось создать TIFF файл.");
+                        return;
+                    }
+
+                    // Устанавливаем параметры для 8-битного изображения
+                    tiff.SetField(TiffTag.IMAGEWIDTH, width);
+                    tiff.SetField(TiffTag.IMAGELENGTH, height);
+                    tiff.SetField(TiffTag.SAMPLESPERPIXEL, 3);        // RGB
+                    tiff.SetField(TiffTag.BITSPERSAMPLE, 8);          // 8 бит на канал
+                    tiff.SetField(TiffTag.PHOTOMETRIC, Photometric.RGB);
+                    tiff.SetField(TiffTag.COMPRESSION, Compression.NONE);
+                    tiff.SetField(TiffTag.PLANARCONFIG, PlanarConfig.CONTIG);
+                    tiff.SetField(TiffTag.ROWSPERSTRIP, height);
+
+                    byte[] rowBuffer = new byte[width * 3]; // 3 канала * 1 байт на канал
+
+                    for (int row = 0; row < height; row++)
+                    {
+                        for (int col = 0; col < width; col++)
+                        {
+                            int index = row * width + col;
+
+                            // Конвертация 16-битных значений в 8-битные (просто берем старший байт)
+                            // Для более точного преобразования можно использовать нормализацию:
+                            // rowBuffer[col * 3] = (byte)(currentData.Red16[index] / 257);
+                            rowBuffer[col * 3] = (byte)(currentData.Red16[index] >> 8);
+                            rowBuffer[col * 3 + 1] = (byte)(currentData.Green16[index] >> 8);
+                            rowBuffer[col * 3 + 2] = (byte)(currentData.Blue16[index] >> 8);
+                        }
+                        tiff.WriteScanline(rowBuffer, row);
+                    }
+                }
+            }
+        }
+
+        private async void SaveAs8bitJpeg_Click(object sender, RoutedEventArgs e) => await SaveAs8BitImage("jpeg");
+        private async void SaveAs8bitPng_Click(object sender, RoutedEventArgs e) => await SaveAs8BitImage("png");
+
+        private async Task SaveAs8BitImage(string format)
+        {
+            if (TabNavigation.SelectedItem is not TabItem tabItem || tabItem.Content is not Redactor redactor)
+            {
+                return;
+            }
+
+            var currentData = redactor.GetCurrentImageData();
+            if (currentData == null)
+            {
+                return;
+            }
+
+            var saveDialog = new SaveFileDialog
+            {
+                DefaultExtension = format,
+                Filters = { new FileDialogFilter {
+            Name = $"{format.ToUpper()} Files",
+            Extensions = { format }
+        }}
+            };
+
+            var path = await saveDialog.ShowAsync((Window)this.VisualRoot);
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                // Создаем временный файл для безопасной работы с памятью
+                var tempFile = Path.GetTempFileName();
+
+                try
+                {
+                    // Конвертируем и сохраняем через временный файл
+                    if (format == "jpeg")
+                    {
+                        await ConvertAndSaveAsJpeg(currentData, tempFile);
+                    }
+                    else if (format == "png")
+                    {
+                        await ConvertAndSaveAsPng(currentData, tempFile);
+                    }
+
+                    // Переносим временный файл в конечное местоположение
+                    File.Move(tempFile, path, overwrite: true);
+                }
+                finally
+                {
+                    if (File.Exists(tempFile))
+                        File.Delete(tempFile);
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        private async Task ConvertAndSaveAsJpeg(OpenFileData data, string tempPath)
+        {
+            using var stream = new SKFileWStream(tempPath);
+            using var pixmap = Create8BitPixmap(data);
+
+            var success = pixmap.Encode(stream, SKEncodedImageFormat.Jpeg, quality: 90);
+            if (!success)
+                throw new Exception("JPEG encoding failed");
+        }
+
+        private async Task ConvertAndSaveAsPng(OpenFileData data, string tempPath)
+        {
+            using var stream = new SKFileWStream(tempPath);
+            using var pixmap = Create8BitPixmap(data);
+
+            var success = pixmap.Encode(stream, SKEncodedImageFormat.Png, quality: 100);
+            if (!success)
+                throw new Exception("PNG encoding failed");
+        }
+
+        private SKPixmap Create8BitPixmap(OpenFileData data)
+        {
+            byte[] pixels = new byte[data.Width * data.Height * 3];
+            for (int i = 0; i < data.Red16.Length; i++)
+            {
+                pixels[i * 3] = (byte)(data.Red16[i] >> 8);      // R
+                pixels[i * 3 + 1] = (byte)(data.Green16[i] >> 8); // G
+                pixels[i * 3 + 2] = (byte)(data.Blue16[i] >> 8);  // B
+            }
+
+            var info = new SKImageInfo(data.Width, data.Height, SKColorType.Rgb888x, SKAlphaType.Opaque);
+
+            var handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
+            var ptr = handle.AddrOfPinnedObject();
+            var pixmap = new SKPixmap(info, ptr);
+
+            handle.Free();
+
+            return pixmap;
+        }
+
+        #endregion
+
+        private void SquareDrawButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabNavigation.SelectedItem is TabItem tabItem && tabItem.Content is Redactor redactor)
+            {
+                redactor.EnableSquareDrawing();
+            }
+        }
+
+        private void CircleDrawButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabNavigation.SelectedItem is TabItem tabItem && tabItem.Content is Redactor redactor)
+            {
+                redactor.EnableCircleDrawing();
+            }
+        }
     }
 }

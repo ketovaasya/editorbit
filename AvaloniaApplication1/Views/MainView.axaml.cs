@@ -406,106 +406,106 @@ namespace AvaloniaApplication1.Views
             }
         }
 
-        private async void SaveAs8bitJpeg_Click(object sender, RoutedEventArgs e) => await SaveAs8BitImage("jpeg");
-        private async void SaveAs8bitPng_Click(object sender, RoutedEventArgs e) => await SaveAs8BitImage("png");
+        //private async void SaveAs8bitJpeg_Click(object sender, RoutedEventArgs e) => await SaveAs8BitImage("jpeg");
+        //private async void SaveAs8bitPng_Click(object sender, RoutedEventArgs e) => await SaveAs8BitImage("png");
 
-        private async Task SaveAs8BitImage(string format)
-        {
-            if (TabNavigation.SelectedItem is not TabItem tabItem || tabItem.Content is not Redactor redactor)
-            {
-                return;
-            }
+        //private async Task SaveAs8BitImage(string format)
+        //{
+        //    if (TabNavigation.SelectedItem is not TabItem tabItem || tabItem.Content is not Redactor redactor)
+        //    {
+        //        return;
+        //    }
 
-            var currentData = redactor.GetCurrentImageData();
-            if (currentData == null)
-            {
-                return;
-            }
+        //    var currentData = redactor.GetCurrentImageData();
+        //    if (currentData == null)
+        //    {
+        //        return;
+        //    }
 
-            var saveDialog = new SaveFileDialog
-            {
-                DefaultExtension = format,
-                Filters = { new FileDialogFilter {
-            Name = $"{format.ToUpper()} Files",
-            Extensions = { format }
-        }}
-            };
+        //    var saveDialog = new SaveFileDialog
+        //    {
+        //        DefaultExtension = format,
+        //        Filters = { new FileDialogFilter {
+        //    Name = $"{format.ToUpper()} Files",
+        //    Extensions = { format }
+        //}}
+        //    };
 
-            var path = await saveDialog.ShowAsync((Window)this.VisualRoot);
-            if (string.IsNullOrEmpty(path)) return;
+        //    var path = await saveDialog.ShowAsync((Window)this.VisualRoot);
+        //    if (string.IsNullOrEmpty(path)) return;
 
-            try
-            {
-                // Создаем временный файл для безопасной работы с памятью
-                var tempFile = Path.GetTempFileName();
+        //    try
+        //    {
+        //        // Создаем временный файл для безопасной работы с памятью
+        //        var tempFile = Path.GetTempFileName();
 
-                try
-                {
-                    // Конвертируем и сохраняем через временный файл
-                    if (format == "jpeg")
-                    {
-                        await ConvertAndSaveAsJpeg(currentData, tempFile);
-                    }
-                    else if (format == "png")
-                    {
-                        await ConvertAndSaveAsPng(currentData, tempFile);
-                    }
+        //        try
+        //        {
+        //            // Конвертируем и сохраняем через временный файл
+        //            if (format == "jpeg")
+        //            {
+        //                await ConvertAndSaveAsJpeg(currentData, tempFile);
+        //            }
+        //            else if (format == "png")
+        //            {
+        //                await ConvertAndSaveAsPng(currentData, tempFile);
+        //            }
 
-                    // Переносим временный файл в конечное местоположение
-                    File.Move(tempFile, path, overwrite: true);
-                }
-                finally
-                {
-                    if (File.Exists(tempFile))
-                        File.Delete(tempFile);
-                }
-            }
-            catch (Exception ex)
-            {
+        //            // Переносим временный файл в конечное местоположение
+        //            File.Move(tempFile, path, overwrite: true);
+        //        }
+        //        finally
+        //        {
+        //            if (File.Exists(tempFile))
+        //                File.Delete(tempFile);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-            }
-        }
+        //    }
+        //}
 
-        private async Task ConvertAndSaveAsJpeg(OpenFileData data, string tempPath)
-        {
-            using var stream = new SKFileWStream(tempPath);
-            using var pixmap = Create8BitPixmap(data);
+        //private async Task ConvertAndSaveAsJpeg(OpenFileData data, string tempPath)
+        //{
+        //    using var stream = new SKFileWStream(tempPath);
+        //    using var pixmap = Create8BitPixmap(data);
 
-            var success = pixmap.Encode(stream, SKEncodedImageFormat.Jpeg, quality: 90);
-            if (!success)
-                throw new Exception("JPEG encoding failed");
-        }
+        //    var success = pixmap.Encode(stream, SKEncodedImageFormat.Jpeg, quality: 90);
+        //    if (!success)
+        //        throw new Exception("JPEG encoding failed");
+        //}
 
-        private async Task ConvertAndSaveAsPng(OpenFileData data, string tempPath)
-        {
-            using var stream = new SKFileWStream(tempPath);
-            using var pixmap = Create8BitPixmap(data);
+        //private async Task ConvertAndSaveAsPng(OpenFileData data, string tempPath)
+        //{
+        //    using var stream = new SKFileWStream(tempPath);
+        //    using var pixmap = Create8BitPixmap(data);
 
-            var success = pixmap.Encode(stream, SKEncodedImageFormat.Png, quality: 100);
-            if (!success)
-                throw new Exception("PNG encoding failed");
-        }
+        //    var success = pixmap.Encode(stream, SKEncodedImageFormat.Png, quality: 100);
+        //    if (!success)
+        //        throw new Exception("PNG encoding failed");
+        //}
 
-        private SKPixmap Create8BitPixmap(OpenFileData data)
-        {
-            byte[] pixels = new byte[data.Width * data.Height * 3];
-            for (int i = 0; i < data.Red16.Length; i++)
-            {
-                pixels[i * 3] = (byte)(data.Red16[i] >> 8);      // R
-                pixels[i * 3 + 1] = (byte)(data.Green16[i] >> 8); // G
-                pixels[i * 3 + 2] = (byte)(data.Blue16[i] >> 8);  // B
-            }
+        //private SKPixmap Create8BitPixmap(OpenFileData data)
+        //{
+        //    byte[] pixels = new byte[data.Width * data.Height * 3];
+        //    for (int i = 0; i < data.Red16.Length; i++)
+        //    {
+        //        pixels[i * 3] = (byte)(data.Red16[i] >> 8);      // R
+        //        pixels[i * 3 + 1] = (byte)(data.Green16[i] >> 8); // G
+        //        pixels[i * 3 + 2] = (byte)(data.Blue16[i] >> 8);  // B
+        //    }
 
-            var info = new SKImageInfo(data.Width, data.Height, SKColorType.Rgb888x, SKAlphaType.Opaque);
+        //    var info = new SKImageInfo(data.Width, data.Height, SKColorType.Rgb888x, SKAlphaType.Opaque);
 
-            var handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
-            var ptr = handle.AddrOfPinnedObject();
-            var pixmap = new SKPixmap(info, ptr);
+        //    var handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
+        //    var ptr = handle.AddrOfPinnedObject();
+        //    var pixmap = new SKPixmap(info, ptr);
 
-            handle.Free();
+        //    handle.Free();
 
-            return pixmap;
-        }
+        //    return pixmap;
+        //}
 
         #endregion
 
@@ -524,5 +524,38 @@ namespace AvaloniaApplication1.Views
                 redactor.EnableCircleDrawing();
             }
         }
+
+        private void LineDrawButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabNavigation.SelectedItem is TabItem tabItem && tabItem.Content is Redactor redactor)
+            {
+                redactor.EnableLineDrawing();
+            }
+        }
+        private void RedChannelOpenButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabNavigation.SelectedItem is TabItem tabItem && tabItem.Content is Redactor redactor)
+            {
+                redactor.InitializeImage(openFiles.FirstOrDefault(f => f.Name == redactor.FileName));
+            }
+        }
+        private void GreenChannelOpenButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabNavigation.SelectedItem is TabItem tabItem && tabItem.Content is Redactor redactor)
+            {
+                redactor.SwapGreenRedChannels();
+
+                redactor.SwapGreenBlueChannels();
+            }
+        }
+        private void BlueChannelOpenButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (TabNavigation.SelectedItem is TabItem tabItem && tabItem.Content is Redactor redactor)
+            {
+                // Меняем местами красный и синий каналы
+                redactor.SwapRedBlueChannels();
+            }
+        }
+        
     }
 }

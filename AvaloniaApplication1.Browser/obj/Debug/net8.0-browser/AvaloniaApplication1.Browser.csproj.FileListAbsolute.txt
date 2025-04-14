@@ -1032,11 +1032,6 @@ C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compres
 C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\fleno6renh-tptq2av103.gz
 C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\cw9psvxrtl-lfu7j35m59.gz
 C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\eo7pwynz6q-oyz0vx2fzb.gz
-C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\wt2tqxn0si-mbxss75wwt.gz
-C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\oa8pohg6v2-4wv5rufezc.gz
-C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\8erm7d66r0-tirme9qxc9.gz
-C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\6fj6518gky-wl3d72xrsq.gz
-C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\8bum9f9xi3-jjpjgzwmit.gz
 C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\staticwebassets.build.json
 C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\staticwebassets.development.json
 C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\staticwebassets.build.endpoints.json
@@ -1053,3 +1048,8 @@ C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\refint\
 C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\AvaloniaApplication1.Browser.pdb
 C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\AvaloniaApplication1.Browser.genruntimeconfig.cache
 C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\ref\AvaloniaApplication1.Browser.dll
+C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\8erm7d66r0-5t4fpqrp88.gz
+C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\6fj6518gky-6h5nvx8kus.gz
+C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\wt2tqxn0si-p0ens73jew.gz
+C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\oa8pohg6v2-gimsur4yvj.gz
+C:\project_archive\AvaloniaApplication1.Browser\obj\Debug\net8.0-browser\compressed\8bum9f9xi3-opahr297dh.gz

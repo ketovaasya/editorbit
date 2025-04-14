@@ -22,7 +22,6 @@ namespace AvaloniaApplication1
         private Point startPoint;
         private SquareInfo currentSquare;
 
-
         public Redactor()
         {
             InitializeComponent();
@@ -53,7 +52,8 @@ namespace AvaloniaApplication1
             DisplayImage();
         }
 
-        private void DisplayImage(bool applySquares = true, bool applyCircles = true)
+        private void DisplayImage(bool applySquares = true, bool applyCircles = true, bool applyLines = true,
+                         LineInfo previewLine = null) // Добавляем параметр для предпросмотра линии
         {
             // Создаем копии массивов для отображения
             ushort[] displayRed = new ushort[currentRed16.Length];
@@ -64,18 +64,10 @@ namespace AvaloniaApplication1
             Array.Copy(currentGreen16, displayGreen, currentGreen16.Length);
             Array.Copy(currentBlue16, displayBlue, currentBlue16.Length);
 
-            // Применяем квадраты только если нужно
-            if (applySquares)
-            {
-                DrawSquaresOn16BitImage(displayRed, displayGreen, displayBlue,
-                                      currentWidth, currentHeight, squares);
-            }
-
-            if (applyCircles)
-            {
-                DrawCirclesOn16BitImage(displayRed, displayGreen, displayBlue,
-                                      currentWidth, currentHeight, circles);
-            }
+            // Применяем фигуры
+            if (applySquares) DrawSquaresOn16BitImage(displayRed, displayGreen, displayBlue, currentWidth, currentHeight, squares);
+            if (applyCircles) DrawCirclesOn16BitImage(displayRed, displayGreen, displayBlue, currentWidth, currentHeight, circles);
+            if (applyLines) DrawLinesOn16BitImage(displayRed, displayGreen, displayBlue, currentWidth, currentHeight, lines, previewLine); // Передаем previewLine
 
             var displayData = new OpenFileData
             {
@@ -137,6 +129,19 @@ namespace AvaloniaApplication1
                     Radius = 0
                 };
             }
+            else if (isDrawingLine)
+            {
+                var position = e.GetCurrentPoint(ImageCanvas).Position;
+                var imagePosition = new Point(
+                    (position.X - Canvas.GetLeft(ImageChu)) / currentScale,
+                    (position.Y - Canvas.GetTop(ImageChu)) / currentScale);
+
+                currentLine = new LineInfo
+                {
+                    StartPoint = imagePosition,
+                    EndPoint = imagePosition
+                };
+            }
         }
 
         private void ImageCanvas_PointerMoved(object sender, PointerEventArgs e)
@@ -179,8 +184,20 @@ namespace AvaloniaApplication1
                 double dy = imageCurrentPoint.Y - currentCircle.Center.Y;
                 currentCircle.Radius = Math.Sqrt(dx * dx + dy * dy);
 
-                DisplayImage(); // Обновляем отображение в реальном времени
+                UpdateCirclePreview();
             }
+            else if (isDrawingLine && currentLine != null && 
+                e.GetCurrentPoint(ImageCanvas).Properties.IsLeftButtonPressed)
+            {
+                var currentPoint = e.GetCurrentPoint(ImageCanvas).Position;
+                var imageCurrentPoint = new Point(
+                    (currentPoint.X - Canvas.GetLeft(ImageChu)) / currentScale,
+                    (currentPoint.Y - Canvas.GetTop(ImageChu)) / currentScale);
+
+                currentLine.EndPoint = imageCurrentPoint;
+                DisplayImage(applyLines: true, previewLine: currentLine); // Передаем текущую линию для предпросмотра
+            }
+
         }
 
         private void ImageCanvas_PointerReleased(object sender, PointerReleasedEventArgs e)
@@ -208,6 +225,17 @@ namespace AvaloniaApplication1
                     DisplayImage();
                 }
                 currentCircle = null;
+                previewBitmap?.Dispose();
+                previewBitmap = null;
+            }
+            else if (isDrawingLine && currentLine != null)
+            {
+                if (currentLine.StartPoint != currentLine.EndPoint)
+                {
+                    lines.Add(currentLine);
+                    DisplayImage();
+                }
+                currentLine = null;
             }
         }
 
@@ -229,6 +257,7 @@ namespace AvaloniaApplication1
             ImageChu.RenderTransform = scaleTransform;
             ImageCanvas.Width = currentWidth * currentScale;
             ImageCanvas.Height = currentHeight * currentScale;
+            UpdateCirclePositions();
             CenterImage();
         }
 
@@ -241,6 +270,26 @@ namespace AvaloniaApplication1
 
                 Canvas.SetLeft(ImageChu, (ImageCanvas.Bounds.Width - imageWidth) / 2);
                 Canvas.SetTop(ImageChu, (ImageCanvas.Bounds.Height - imageHeight) / 2);
+            }
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+            {
+                isShiftPressed = true;
+                UpdateLineWithConstraints();
+            }
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            base.OnKeyUp(e);
+            if (e.Key == Key.LeftShift || e.Key == Key.RightShift)
+            {
+                isShiftPressed = false;
+                UpdateLineWithConstraints();
             }
         }
 
@@ -292,7 +341,6 @@ namespace AvaloniaApplication1
             var newSquares = new List<SquareInfo>();
             foreach (var square in squares)
             {
-                // Пересчитываем координаты квадрата относительно новой области
                 double newX = square.Position.X - x;
                 double newY = square.Position.Y - y;
 
@@ -309,8 +357,52 @@ namespace AvaloniaApplication1
                     });
                 }
             }
-
             squares = newSquares;
+
+            var newCircles = new List<CircleInfo>();
+            foreach (var circle in circles)
+            {
+                double newCenterX = circle.Center.X - x;
+                double newCenterY = circle.Center.Y - y;
+
+                if (newCenterX - circle.Radius >= 0 &&
+                    newCenterY - circle.Radius >= 0 &&
+                    newCenterX + circle.Radius <= width &&
+                    newCenterY + circle.Radius <= height)
+                {
+                    newCircles.Add(new CircleInfo
+                    {
+                        Center = new Point(newCenterX, newCenterY),
+                        Radius = circle.Radius,
+                        StrokeColor = circle.StrokeColor,
+                        StrokeThickness = circle.StrokeThickness
+                    });
+                }
+            }
+            circles = newCircles;
+
+            var newLines = new List<LineInfo>();
+            foreach (var line in lines)
+            {
+                double newStartX = line.StartPoint.X - x;
+                double newStartY = line.StartPoint.Y - y;
+                double newEndX = line.EndPoint.X - x;
+                double newEndY = line.EndPoint.Y - y;
+
+                if (newStartX >= 0 && newStartY >= 0 && newStartX < width && newStartY < height &&
+                    newEndX >= 0 && newEndY >= 0 && newEndX < width && newEndY < height)
+                {
+                    newLines.Add(new LineInfo
+                    {
+                        StartPoint = new Point(newStartX, newStartY),
+                        EndPoint = new Point(newEndX, newEndY),
+                        StrokeColor = line.StrokeColor,
+                        StrokeThickness = line.StrokeThickness
+                    });
+                }
+            }
+            lines = newLines;
+
             DisplayImage();
         }
 
@@ -352,9 +444,8 @@ namespace AvaloniaApplication1
             var newSquares = new List<SquareInfo>();
             foreach (var square in squares)
             {
-                // Поворачиваем квадрат на 90 градусов по часовой стрелке
-                double newX = currentHeight - square.Position.Y - square.Size;
-                double newY = square.Position.X;
+                double newX = square.Position.Y;
+                double newY = oldWidth - square.Position.X - square.Size;
 
                 newSquares.Add(new SquareInfo
                 {
@@ -364,11 +455,44 @@ namespace AvaloniaApplication1
                     StrokeThickness = square.StrokeThickness
                 });
             }
-
             squares = newSquares;
+
+            var newCircles = new List<CircleInfo>();
+            foreach (var circle in circles)
+            {
+                double newCenterX = circle.Center.Y;
+                double newCenterY = oldWidth - circle.Center.X;
+
+                newCircles.Add(new CircleInfo
+                {
+                    Center = new Point(newCenterX, newCenterY),
+                    Radius = circle.Radius,
+                    StrokeColor = circle.StrokeColor,
+                    StrokeThickness = circle.StrokeThickness
+                });
+            }
+            circles = newCircles;
+
+            var newLines = new List<LineInfo>();
+            foreach (var line in lines)
+            {
+                double newStartX = line.StartPoint.Y;
+                double newStartY = oldWidth - line.StartPoint.X;
+                double newEndX = line.EndPoint.Y;
+                double newEndY = oldWidth - line.EndPoint.X;
+
+                newLines.Add(new LineInfo
+                {
+                    StartPoint = new Point(newStartX, newStartY),
+                    EndPoint = new Point(newEndX, newEndY),
+                    StrokeColor = line.StrokeColor,
+                    StrokeThickness = line.StrokeThickness
+                });
+            }
+            lines = newLines;
+
+
             DisplayImage();
-
-
         }
         #endregion
 
@@ -391,17 +515,15 @@ namespace AvaloniaApplication1
                 int size = (int)square.Size;
                 int thickness = (int)square.StrokeThickness;
 
-                // Получаем максимальные значения из текущего изображения для каждого канала
+                // Получаем максимальные значения из текущего изображения
                 ushort maxR = currentRed16.Max();
                 ushort maxG = currentGreen16.Max();
                 ushort maxB = currentBlue16.Max();
 
-                // Устанавливаем значения для квадратов (максимальные значения для каждого канала)
                 ushort redValue = maxR;
                 ushort greenValue = maxG;
                 ushort blueValue = maxB;
 
-                // Если все каналы нулевые (чтобы избежать невидимых квадратов на черном фоне)
                 if (maxR == 0 && maxG == 0 && maxB == 0)
                 {
                     redValue = 65535;
@@ -409,7 +531,7 @@ namespace AvaloniaApplication1
                     blueValue = 65535;
                 }
 
-                // Рисуем границы квадрата
+                // Рисуем границы квадрата с учетом поворота
                 for (int t = 0; t < thickness; t++)
                 {
                     // Верхняя и нижняя границы
@@ -418,18 +540,20 @@ namespace AvaloniaApplication1
                         if (x >= 0 && x < width)
                         {
                             // Верхняя граница
-                            if (y1 - t >= 0 && y1 - t < height)
+                            int yTop = y1 - t;
+                            if (yTop >= 0 && yTop < height)
                             {
-                                int index = (y1 - t) * width + x;
+                                int index = yTop * width + x;
                                 red[index] = redValue;
                                 green[index] = greenValue;
                                 blue[index] = blueValue;
                             }
 
                             // Нижняя граница
-                            if (y1 + size - 1 + t >= 0 && y1 + size - 1 + t < height)
+                            int yBottom = y1 + size - 1 + t;
+                            if (yBottom >= 0 && yBottom < height)
                             {
-                                int index = (y1 + size - 1 + t) * width + x;
+                                int index = yBottom * width + x;
                                 red[index] = redValue;
                                 green[index] = greenValue;
                                 blue[index] = blueValue;
@@ -443,18 +567,20 @@ namespace AvaloniaApplication1
                         if (y >= 0 && y < height)
                         {
                             // Левая граница
-                            if (x1 - t >= 0 && x1 - t < width)
+                            int xLeft = x1 - t;
+                            if (xLeft >= 0 && xLeft < width)
                             {
-                                int index = y * width + x1 - t;
+                                int index = y * width + xLeft;
                                 red[index] = redValue;
                                 green[index] = greenValue;
                                 blue[index] = blueValue;
                             }
 
                             // Правая граница
-                            if (x1 + size - 1 + t >= 0 && x1 + size - 1 + t < width)
+                            int xRight = x1 + size - 1 + t;
+                            if (xRight >= 0 && xRight < width)
                             {
-                                int index = y * width + x1 + size - 1 + t;
+                                int index = y * width + xRight;
                                 red[index] = redValue;
                                 green[index] = greenValue;
                                 blue[index] = blueValue;
@@ -477,12 +603,13 @@ namespace AvaloniaApplication1
             public Point Center { get; set; }
             public double Radius { get; set; }
             public Color StrokeColor { get; set; } = Colors.Blue;
-            public double StrokeThickness { get; set; } = 2;
+            public double StrokeThickness { get; set; } = 1;
         }
 
         private bool isDrawingCircle = false;
         private CircleInfo currentCircle;
         private List<CircleInfo> circles = new List<CircleInfo>();
+        private WriteableBitmap previewBitmap;
 
         public void EnableCircleDrawing()
         {
@@ -490,68 +617,85 @@ namespace AvaloniaApplication1
             isDrawingSquare = false;
             isCropping = false;
             CropSelection.IsVisible = false;
+
+            previewBitmap = new WriteableBitmap(
+                new PixelSize(currentWidth, currentHeight),
+                new Vector(96, 96),
+                Avalonia.Platform.PixelFormat.Bgra8888);
         }
 
         private void DrawCirclesOn16BitImage(ushort[] red, ushort[] green, ushort[] blue,
-                                       int width, int height, List<CircleInfo> circles)
+                                           int width, int height, List<CircleInfo> circles,
+                                           CircleInfo previewCircle = null)
         {
+            // Создаем временные массивы для предпросмотра
+            ushort[] tempRed = new ushort[red.Length];
+            ushort[] tempGreen = new ushort[green.Length];
+            ushort[] tempBlue = new ushort[blue.Length];
+
+            Array.Copy(red, tempRed, red.Length);
+            Array.Copy(green, tempGreen, green.Length);
+            Array.Copy(blue, tempBlue, blue.Length);
+
+            // Рисуем все сохраненные круги
             foreach (var circle in circles)
             {
-                int centerX = (int)circle.Center.X;
-                int centerY = (int)circle.Center.Y;
-                int radius = (int)circle.Radius;
-                int thickness = (int)circle.StrokeThickness;
+                DrawSingleCircle(tempRed, tempGreen, tempBlue, width, height, circle);
+            }
 
-                // Получаем максимальные значения из текущего изображения
-                ushort maxR = currentRed16.Max();
-                ushort maxG = currentGreen16.Max();
-                ushort maxB = currentBlue16.Max();
+            // Рисуем круг для предпросмотра (если есть)
+            if (previewCircle != null && previewCircle.Radius > 0)
+            {
+                DrawSingleCircle(tempRed, tempGreen, tempBlue, width, height, previewCircle);
+            }
 
-                ushort redValue = maxR;
-                ushort greenValue = maxG;
-                ushort blueValue = maxB;
+            // Копируем результаты обратно
+            Array.Copy(tempRed, red, tempRed.Length);
+            Array.Copy(tempGreen, green, tempGreen.Length);
+            Array.Copy(tempBlue, blue, tempBlue.Length);
+        }
 
-                if (maxR == 0 && maxG == 0 && maxB == 0)
-                {
-                    redValue = 65535;
-                    greenValue = 65535;
-                    blueValue = 65535;
-                }
+        private void DrawSingleCircle(ushort[] red, ushort[] green, ushort[] blue,
+                    int width, int height, CircleInfo circle)
+        {
+            int centerX = (int)circle.Center.X;
+            int centerY = (int)circle.Center.Y;
+            int radius = (int)circle.Radius;
+            int thickness = (int)circle.StrokeThickness;
 
-                // Алгоритм Брезенхэма для рисования окружности
-                void DrawCirclePixel(int x, int y)
-                {
-                    for (int t = 0; t < thickness; t++)
-                    {
-                        int currentRadius = radius + t;
-                        int xc = centerX + x;
-                        int yc = centerY + y;
+            ushort maxR = currentRed16.Max();
+            ushort maxG = currentGreen16.Max();
+            ushort maxB = currentBlue16.Max();
 
-                        if (xc >= 0 && xc < width && yc >= 0 && yc < height)
-                        {
-                            int index = yc * width + xc;
-                            red[index] = redValue;
-                            green[index] = greenValue;
-                            blue[index] = blueValue;
-                        }
-                    }
-                }
+            ushort redValue = maxR;
+            ushort greenValue = maxG;
+            ushort blueValue = maxB;
+
+            if (maxR == 0 && maxG == 0 && maxB == 0)
+            {
+                redValue = 65535;
+                greenValue = 65535;
+                blueValue = 65535;
+            }
+
+            for (int r = radius - thickness / 2; r <= radius + thickness / 2; r++)
+            {
+                if (r <= 0) continue;
 
                 int x = 0;
-                int y = radius;
-                int d = 3 - 2 * radius;
+                int y = r;
+                int d = 3 - 2 * r;
 
                 while (y >= x)
                 {
-                    // Отрисовка 8 симметричных точек
-                    DrawCirclePixel(x, y);
-                    DrawCirclePixel(-x, y);
-                    DrawCirclePixel(x, -y);
-                    DrawCirclePixel(-x, -y);
-                    DrawCirclePixel(y, x);
-                    DrawCirclePixel(-y, x);
-                    DrawCirclePixel(y, -x);
-                    DrawCirclePixel(-y, -x);
+                    DrawPixel(centerX + x, centerY + y);
+                    DrawPixel(centerX - x, centerY + y);
+                    DrawPixel(centerX + x, centerY - y);
+                    DrawPixel(centerX - x, centerY - y);
+                    DrawPixel(centerX + y, centerY + x);
+                    DrawPixel(centerX - y, centerY + x);
+                    DrawPixel(centerX + y, centerY - x);
+                    DrawPixel(centerX - y, centerY - x);
 
                     if (d < 0)
                     {
@@ -565,6 +709,252 @@ namespace AvaloniaApplication1
                     x++;
                 }
             }
+
+            void DrawPixel(int x, int y)
+            {
+                if (x >= 0 && x < width && y >= 0 && y < height)
+                {
+                    int index = y * width + x;
+                    red[index] = redValue;
+                    green[index] = greenValue;
+                    blue[index] = blueValue;
+                }
+            }
+        }
+
+        private void UpdateCirclePreview()
+        {
+            if (currentCircle == null || currentCircle.Radius <= 0) return;
+
+            // Создаем временные массивы для предпросмотра
+            ushort[] displayRed = new ushort[currentRed16.Length];
+            ushort[] displayGreen = new ushort[currentGreen16.Length];
+            ushort[] displayBlue = new ushort[currentBlue16.Length];
+
+            Array.Copy(currentRed16, displayRed, currentRed16.Length);
+            Array.Copy(currentGreen16, displayGreen, currentGreen16.Length);
+            Array.Copy(currentBlue16, displayBlue, currentBlue16.Length);
+
+            // Рисуем все сохраненные круги и квадраты
+            DrawSquaresOn16BitImage(displayRed, displayGreen, displayBlue,
+                                  currentWidth, currentHeight, squares);
+
+            DrawCirclesOn16BitImage(displayRed, displayGreen, displayBlue,
+                                  currentWidth, currentHeight, circles, currentCircle);
+
+            // Отображаем предпросмотр
+            var displayData = new OpenFileData
+            {
+                Name = FileName,
+                Width = currentWidth,
+                Height = currentHeight,
+                Red16 = displayRed,
+                Green16 = displayGreen,
+                Blue16 = displayBlue
+            };
+
+            PrintImageChunk(displayData, ImageChu, 0, 0, currentWidth, currentHeight);
+        }
+
+        private void UpdateCirclePositions()
+        {
+            foreach (var circle in circles)
+            {
+                circle.Center = new Point(circle.Center.X * currentScale, circle.Center.Y * currentScale);
+
+                circle.Radius *= currentScale;
+            }
+        }
+
+        #endregion
+
+        #region Линия
+        public class LineInfo
+        {
+            public Point StartPoint { get; set; }
+            public Point EndPoint { get; set; }
+            public Color StrokeColor { get; set; } = Colors.Green; 
+            public double StrokeThickness { get; set; } = 2;
+        }
+
+        private bool isDrawingLine = false;
+        private LineInfo currentLine;
+        private List<LineInfo> lines = new List<LineInfo>();
+        private bool isShiftPressed = false;
+
+        public void EnableLineDrawing()
+        {
+            isDrawingLine = true;
+            isDrawingSquare = false;
+            isDrawingCircle = false;
+            isCropping = false;
+            CropSelection.IsVisible = false;
+        }
+        private void DrawLinesOn16BitImage(ushort[] red, ushort[] green, ushort[] blue,
+                         int width, int height, List<LineInfo> lines,
+                         LineInfo previewLine = null)
+        {
+            // Создаем временные массивы для предпросмотра
+            ushort[] tempRed = new ushort[red.Length];
+            ushort[] tempGreen = new ushort[green.Length];
+            ushort[] tempBlue = new ushort[blue.Length];
+
+            Array.Copy(red, tempRed, red.Length);
+            Array.Copy(green, tempGreen, green.Length);
+            Array.Copy(blue, tempBlue, blue.Length);
+
+            // Рисуем все сохраненные линии
+            foreach (var line in lines)
+            {
+                DrawSingleLine(tempRed, tempGreen, tempBlue, width, height, line);
+            }
+
+            // Рисуем линию для предпросмотра (если есть)
+            if (previewLine != null && previewLine.StartPoint != previewLine.EndPoint)
+            {
+                DrawSingleLine(tempRed, tempGreen, tempBlue, width, height, previewLine);
+            }
+
+            // Копируем результаты обратно
+            Array.Copy(tempRed, red, tempRed.Length);
+            Array.Copy(tempGreen, green, tempGreen.Length);
+            Array.Copy(tempBlue, blue, tempBlue.Length);
+        }
+        private void DrawSingleLine(ushort[] red, ushort[] green, ushort[] blue,
+                                  int width, int height, LineInfo line)
+        {
+            int x0 = (int)line.StartPoint.X;
+            int y0 = (int)line.StartPoint.Y;
+            int x1 = (int)line.EndPoint.X;
+            int y1 = (int)line.EndPoint.Y;
+            int thickness = (int)line.StrokeThickness;
+
+            // Получаем максимальные значения из текущего изображения
+            ushort maxR = currentRed16.Max();
+            ushort maxG = currentGreen16.Max();
+            ushort maxB = currentBlue16.Max();
+
+            ushort redValue = maxR;
+            ushort greenValue = maxG;
+            ushort blueValue = maxB;
+
+            if (maxR == 0 && maxG == 0 && maxB == 0)
+            {
+                redValue = 65535;
+                greenValue = 65535;
+                blueValue = 65535;
+            }
+
+            // Алгоритм Брезенхема для рисования линии
+            int dx = Math.Abs(x1 - x0);
+            int dy = Math.Abs(y1 - y0);
+            int sx = x0 < x1 ? 1 : -1;
+            int sy = y0 < y1 ? 1 : -1;
+            int err = dx - dy;
+
+            while (true)
+            {
+                // Рисуем пиксель с учетом толщины линии
+                for (int t = -thickness / 2; t <= thickness / 2; t++)
+                {
+                    for (int s = -thickness / 2; s <= thickness / 2; s++)
+                    {
+                        int px = x0 + t;
+                        int py = y0 + s;
+                        if (px >= 0 && px < width && py >= 0 && py < height)
+                        {
+                            int index = py * width + px;
+                            red[index] = redValue;
+                            green[index] = greenValue;
+                            blue[index] = blueValue;
+                        }
+                    }
+                }
+
+                if (x0 == x1 && y0 == y1) break;
+                int e2 = 2 * err;
+                if (e2 > -dy)
+                {
+                    err -= dy;
+                    x0 += sx;
+                }
+                if (e2 < dx)
+                {
+                    err += dx;
+                    y0 += sy;
+                }
+            }
+        }
+        private void UpdateLineWithConstraints()
+        {
+            if (currentLine == null) return;
+
+            if (isShiftPressed)
+            {
+                // Делаем линию горизонтальной, вертикальной или под 45 градусов
+                double dx = currentLine.EndPoint.X - currentLine.StartPoint.X;
+                double dy = currentLine.EndPoint.Y - currentLine.StartPoint.Y;
+
+                if (Math.Abs(dx) > Math.Abs(dy))
+                {
+                    // Горизонтальная линия
+                    currentLine.EndPoint = new Point(currentLine.EndPoint.X, currentLine.StartPoint.Y);
+                }
+                else
+                {
+                    // Вертикальная линия
+                    currentLine.EndPoint = new Point(currentLine.StartPoint.X, currentLine.EndPoint.Y);
+                }
+
+                // Дополнительно можно добавить проверку на угол 45 градусов
+                double angle = Math.Atan2(dy, dx) * (180 / Math.PI);
+                if (Math.Abs(angle % 45) < 5) // Если близко к 45 градусам
+                {
+                    double length = Math.Max(Math.Abs(dx), Math.Abs(dy));
+                    currentLine.EndPoint = new Point(
+                        currentLine.StartPoint.X + length * Math.Sign(dx),
+                        currentLine.StartPoint.Y + length * Math.Sign(dy));
+                }
+            }
+        }
+        #endregion
+
+        #region Blue Channel
+        private bool isBlueChannelPrimary = false;
+        public void SwapRedBlueChannels()
+        {
+            ushort[] tempRed = currentRed16.ToArray();
+            ushort[] tempBlue = currentBlue16.ToArray();
+
+            currentRed16 = tempBlue;
+            currentBlue16 = tempRed;
+
+
+            DisplayImage();
+        }
+        #endregion
+
+        #region Green Channel 
+        public void SwapGreenRedChannels()
+        {
+            ushort[] tempGreen = currentGreen16.ToArray();
+            ushort[] tempRed = currentRed16.ToArray();
+
+            currentGreen16 = tempRed;
+            currentRed16 = tempGreen;
+
+            DisplayImage();
+        }
+
+        public void SwapGreenBlueChannels()
+        {
+            ushort[] tempGreen = currentGreen16.ToArray();
+            ushort[] tempBlue = currentBlue16.ToArray();
+
+            currentGreen16 = tempBlue;
+            currentBlue16 = tempGreen;
+
+            DisplayImage();
         }
         #endregion
 
@@ -627,20 +1017,14 @@ namespace AvaloniaApplication1
         public OpenFileData GetCurrentImageData()
         {
             // Создаем копии массивов для сохранения
-            ushort[] saveRed = new ushort[currentRed16.Length];
-            ushort[] saveGreen = new ushort[currentGreen16.Length];
-            ushort[] saveBlue = new ushort[currentBlue16.Length];
+            ushort[] saveRed = currentRed16.ToArray();
+            ushort[] saveGreen = currentGreen16.ToArray();
+            ushort[] saveBlue = currentBlue16.ToArray();
 
-            Array.Copy(currentRed16, saveRed, currentRed16.Length);
-            Array.Copy(currentGreen16, saveGreen, currentGreen16.Length);
-            Array.Copy(currentBlue16, saveBlue, currentBlue16.Length);
-
-            // Применяем квадраты к данным перед сохранением
-            DrawSquaresOn16BitImage(saveRed, saveGreen, saveBlue,
-                                  currentWidth, currentHeight, squares);
-
-            DrawCirclesOn16BitImage(saveRed, saveGreen, saveBlue,
-                         currentWidth, currentHeight, circles);
+            // Применяем все фигуры к данным перед сохранением
+            DrawSquaresOn16BitImage(saveRed, saveGreen, saveBlue, currentWidth, currentHeight, squares);
+            DrawCirclesOn16BitImage(saveRed, saveGreen, saveBlue, currentWidth, currentHeight, circles);
+            DrawLinesOn16BitImage(saveRed, saveGreen, saveBlue, currentWidth, currentHeight, lines);
 
             return new OpenFileData
             {
@@ -652,9 +1036,6 @@ namespace AvaloniaApplication1
                 Height = currentHeight
             };
         }
-
-
         #endregion
-
     }
 }

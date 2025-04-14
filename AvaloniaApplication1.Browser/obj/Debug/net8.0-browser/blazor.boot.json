@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "AvaloniaApplication1.Browser",
   "resources": {
-    "hash": "sha256-0mFHnOV4GTl+mBufAd0oqRv5NKn9lkTtz+ykNQ55/eU=",
+    "hash": "sha256-Wylpi8/LO4XrGfuWfMDvenVQA4uoBBLMkyed4LXe0s8=",
     "jsModuleNative": {
       "dotnet.native.js": "sha256-B6DNRvFeCUi3jbx9uKpuj+hV9cN0KG4RdZj1FgBZwj8="
     },
@@ -211,12 +211,12 @@
       "mscorlib.wasm": "sha256-QoC5hTKpDNO6efLnEvYwV9OJBXvYRq8/1yGhNZKiNCw=",
       "netstandard.wasm": "sha256-JT2F4bYWJpaSGq+iD0ITLpWxsDhMUjhqje9RpBtTg7w=",
       "System.Private.CoreLib.wasm": "sha256-fvIPBcvgvsRuWrKi2LGQsLYvcKUSnyIuBUsE3LJu/0Y=",
-      "AvaloniaApplication1.wasm": "sha256-TgAsRSG16XbJdtVl/dlq1s4njrYfD4oxnXPSzcm7yuw=",
-      "AvaloniaApplication1.Browser.wasm": "sha256-K1nryExFCLP5bzur9ZDTEabNWAlJc7bozmfJ/NmlbUg="
+      "AvaloniaApplication1.wasm": "sha256-ua6yVKDAs0FNZ6goSMIUfWplbkILDoSDojLBOaXzEA0=",
+      "AvaloniaApplication1.Browser.wasm": "sha256-GRfjM0+RSulOXwM1sJiXExVBJTCBG1yDOdg2sFi9tQY="
     },
     "pdb": {
-      "AvaloniaApplication1.pdb": "sha256-TCz8xmtfJzn+rsMT5YSX3FE1w5Ptxa7k/4NaM1qJAec=",
-      "AvaloniaApplication1.Browser.pdb": "sha256-fC1o1nvL5maxLhRiNpMlbwAUK3Q1lS6dS7RFDd33tLQ="
+      "AvaloniaApplication1.pdb": "sha256-+EqAwbwbv5AmNHzcQ+6R4Crd1xES9uAJB+Gc15fevCA=",
+      "AvaloniaApplication1.Browser.pdb": "sha256-ep59e5w/S8QaqWzSXsLc3CB5Vi8ZtwCAwQjc/DaZybE="
     }
   },
   "cacheBootResources": true,

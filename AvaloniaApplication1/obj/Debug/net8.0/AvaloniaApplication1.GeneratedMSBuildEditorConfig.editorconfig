@@ -32,3 +32,6 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [C:/project_archive/AvaloniaApplication1/Views/Redactor.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[C:/project_archive/AvaloniaApplication1/Views/ShannelSwapDialog.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

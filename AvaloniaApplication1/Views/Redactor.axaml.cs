@@ -39,6 +39,16 @@ namespace AvaloniaApplication1
         private List<SquareInfo> squares = new List<SquareInfo>();
 
 
+        private ushort[] currentAlpha16; // Добавляем массив для альфа-канала
+
+        public enum Channel
+        {
+            Red,
+            Green,
+            Blue,
+            Alpha
+        }
+
         public void InitializeImage(OpenFileData fileData)
         {
             currentFileData = fileData;
@@ -46,6 +56,7 @@ namespace AvaloniaApplication1
             currentRed16 = fileData.Red16.ToArray();
             currentGreen16 = fileData.Green16.ToArray();
             currentBlue16 = fileData.Blue16.ToArray();
+            currentAlpha16 = fileData.Alpha16?.ToArray() ?? new ushort[fileData.Red16.Length];
             currentWidth = fileData.Width;
             currentHeight = fileData.Height;
             squares.Clear();
@@ -53,21 +64,21 @@ namespace AvaloniaApplication1
         }
 
         private void DisplayImage(bool applySquares = true, bool applyCircles = true, bool applyLines = true,
-                         LineInfo previewLine = null) // Добавляем параметр для предпросмотра линии
+                        LineInfo previewLine = null)
         {
-            // Создаем копии массивов для отображения
             ushort[] displayRed = new ushort[currentRed16.Length];
             ushort[] displayGreen = new ushort[currentGreen16.Length];
             ushort[] displayBlue = new ushort[currentBlue16.Length];
+            ushort[] displayAlpha = currentAlpha16 != null ? new ushort[currentAlpha16.Length] : null;
 
             Array.Copy(currentRed16, displayRed, currentRed16.Length);
             Array.Copy(currentGreen16, displayGreen, currentGreen16.Length);
             Array.Copy(currentBlue16, displayBlue, currentBlue16.Length);
+            if (displayAlpha != null) Array.Copy(currentAlpha16, displayAlpha, currentAlpha16.Length);
 
-            // Применяем фигуры
             if (applySquares) DrawSquaresOn16BitImage(displayRed, displayGreen, displayBlue, currentWidth, currentHeight, squares);
             if (applyCircles) DrawCirclesOn16BitImage(displayRed, displayGreen, displayBlue, currentWidth, currentHeight, circles);
-            if (applyLines) DrawLinesOn16BitImage(displayRed, displayGreen, displayBlue, currentWidth, currentHeight, lines, previewLine); // Передаем previewLine
+            if (applyLines) DrawLinesOn16BitImage(displayRed, displayGreen, displayBlue, currentWidth, currentHeight, lines, previewLine);
 
             var displayData = new OpenFileData
             {
@@ -76,7 +87,8 @@ namespace AvaloniaApplication1
                 Height = currentHeight,
                 Red16 = displayRed,
                 Green16 = displayGreen,
-                Blue16 = displayBlue
+                Blue16 = displayBlue,
+                Alpha16 = displayAlpha
             };
 
             PrintImageChunk(displayData, ImageChu, 0, 0, currentWidth, currentHeight);
@@ -84,6 +96,7 @@ namespace AvaloniaApplication1
             ImageCanvas.Height = currentHeight * currentScale;
             CenterImage();
         }
+
 
         private void InitializeEventHandlers()
         {
@@ -958,21 +971,97 @@ namespace AvaloniaApplication1
         }
         #endregion
 
+        #region Channel Operations
+        public void SwapChannels(Channel source, Channel destination)
+        {
+            ushort[] sourceArray = GetChannelArray(source);
+            ushort[] destArray = GetChannelArray(destination);
+
+            SetChannelArray(destination, sourceArray);
+            SetChannelArray(source, destArray);
+
+            DisplayImage();
+        }
+
+        public void AddAlphaChannel()
+        {
+            if (currentAlpha16 == null || currentAlpha16.Length != currentRed16.Length)
+            {
+                currentAlpha16 = new ushort[currentRed16.Length];
+                Array.Fill(currentAlpha16, ushort.MaxValue); // Инициализация полностью непрозрачным
+            }
+            DisplayImage();
+        }
+
+        public void RemoveAlphaChannel()
+        {
+            currentAlpha16 = null;
+            DisplayImage();
+        }
+
+        public void SetChannel(Channel channel, ushort[] values)
+        {
+            if (values.Length != currentRed16.Length)
+                throw new ArgumentException("Длина массива должна соответствовать размерам изображения");
+
+            SetChannelArray(channel, values);
+            DisplayImage();
+        }
+
+        public ushort[] GetChannel(Channel channel)
+        {
+            return GetChannelArray(channel).ToArray();
+        }
+
+        private ushort[] GetChannelArray(Channel channel)
+        {
+            return channel switch
+            {
+                Channel.Red => currentRed16,
+                Channel.Green => currentGreen16,
+                Channel.Blue => currentBlue16,
+                Channel.Alpha => currentAlpha16 ?? throw new InvalidOperationException("Альфа-канал не существует"),
+                _ => throw new ArgumentException("Неверный канал")
+            };
+        }
+
+        private void SetChannelArray(Channel channel, ushort[] values)
+        {
+            switch (channel)
+            {
+                case Channel.Red:
+                    currentRed16 = values;
+                    break;
+                case Channel.Green:
+                    currentGreen16 = values;
+                    break;
+                case Channel.Blue:
+                    currentBlue16 = values;
+                    break;
+                case Channel.Alpha:
+                    if (currentAlpha16 == null) AddAlphaChannel();
+                    currentAlpha16 = values;
+                    break;
+            }
+        }
+        #endregion
+
         #region Файл 
         private void PrintImageChunk(OpenFileData file, Image imageControl, int chunkX, int chunkY, int chunkWidth, int chunkHeight)
         {
             var bitmap = new WriteableBitmap(
                 new PixelSize(chunkWidth, chunkHeight),
                 new Vector(96, 96),
-                Avalonia.Platform.PixelFormat.Bgra8888);
+                Avalonia.Platform.PixelFormat.Bgra8888,
+                Avalonia.Platform.AlphaFormat.Premul);
 
             using (var framebuffer = bitmap.Lock())
             {
                 unsafe
                 {
-                    var buffer = (uint*)framebuffer.Address;
+                    var buffer = (byte*)framebuffer.Address;
 
-                    // Автоматическое контрастирование для каждого канала
+                    // Calculate ranges for normalization
                     ushort minR = file.Red16.Min();
                     ushort maxR = file.Red16.Max();
                     double rangeR = Math.Max(1, maxR - minR);
@@ -985,27 +1074,40 @@ namespace AvaloniaApplication1
                     ushort maxB = file.Blue16.Max();
                     double rangeB = Math.Max(1, maxB - minB);
 
+                    bool hasAlpha = file.Alpha16 != null;
+                    ushort minA = hasAlpha ? file.Alpha16.Min() : ushort.MaxValue;
+                    ushort maxA = hasAlpha ? file.Alpha16.Max() : ushort.MaxValue;
+                    double rangeA = Math.Max(1, maxA - minA);
+
                     for (int y = 0; y < chunkHeight; y++)
                     {
                         for (int x = 0; x < chunkWidth; x++)
                         {
                             int srcX = chunkX + x;
                             int srcY = chunkY + y;
+                            int destIndex = (y * chunkWidth + x) * 4;
 
                             if (srcX >= file.Width || srcY >= file.Height)
                             {
-                                buffer[y * chunkWidth + x] = 0xFF000000;
+                                // Transparent black for areas outside the image
+                                buffer[destIndex] = 0;     // B
+                                buffer[destIndex + 1] = 0; // G
+                                buffer[destIndex + 2] = 0; // R
+                                buffer[destIndex + 3] = 0; // A
                                 continue;
                             }
 
-                            int index = srcY * file.Width + srcX;
+                            int srcIndex = srcY * file.Width + srcX;
 
-                            // Нормализация с сохранением относительной яркости
-                            byte r = (byte)((file.Red16[index] - minR) * 255 / rangeR);
-                            byte g = (byte)((file.Green16[index] - minG) * 255 / rangeG);
-                            byte b = (byte)((file.Blue16[index] - minB) * 255 / rangeB);
+                            // Convert 16-bit to 8-bit with proper scaling
+                            buffer[destIndex] = (byte)((file.Blue16[srcIndex] - minB) * 255 / rangeB);   // B
+                            buffer[destIndex + 1] = (byte)((file.Green16[srcIndex] - minG) * 255 / rangeG); // G
+                            buffer[destIndex + 2] = (byte)((file.Red16[srcIndex] - minR) * 255 / rangeR);   // R
 
-                            buffer[y * chunkWidth + x] = (uint)(255 << 24 | b << 16 | g << 8 | r);
+                            // Handle alpha channel (use full opacity if no alpha channel)
+                            buffer[destIndex + 3] = hasAlpha
+                                ? (byte)((file.Alpha16[srcIndex] - minA) * 255 / rangeA)
+                                : byte.MaxValue;
                         }
                     }
                 }
@@ -1014,14 +1116,14 @@ namespace AvaloniaApplication1
             imageControl.Source = bitmap;
         }
 
+
         public OpenFileData GetCurrentImageData()
         {
-            // Создаем копии массивов для сохранения
             ushort[] saveRed = currentRed16.ToArray();
             ushort[] saveGreen = currentGreen16.ToArray();
             ushort[] saveBlue = currentBlue16.ToArray();
+            ushort[] saveAlpha = currentAlpha16?.ToArray();
 
-            // Применяем все фигуры к данным перед сохранением
             DrawSquaresOn16BitImage(saveRed, saveGreen, saveBlue, currentWidth, currentHeight, squares);
             DrawCirclesOn16BitImage(saveRed, saveGreen, saveBlue, currentWidth, currentHeight, circles);
             DrawLinesOn16BitImage(saveRed, saveGreen, saveBlue, currentWidth, currentHeight, lines);
@@ -1032,6 +1134,7 @@ namespace AvaloniaApplication1
                 Red16 = saveRed,
                 Green16 = saveGreen,
                 Blue16 = saveBlue,
+                Alpha16 = saveAlpha,
                 Width = currentWidth,
                 Height = currentHeight
             };

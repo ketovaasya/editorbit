@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AvaloniaApplication1.Browser")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+72be28181ef23a03331179410f75333eacdb07bb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fc023b41ec81239f9fbbd91a9531fb89141305c0")]
 [assembly: System.Reflection.AssemblyProductAttribute("AvaloniaApplication1.Browser")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AvaloniaApplication1.Browser")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -10,9 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia.Desktop" Version="$(AvaloniaVersion)" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.0" />
     <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.660" />
-    <PackageReference Include="SkiaSharp" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
   </ItemGroup>
 
   <ItemGroup>

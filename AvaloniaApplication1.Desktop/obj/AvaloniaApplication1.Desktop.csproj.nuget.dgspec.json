@@ -56,7 +56,7 @@
           "dependencies": {
             "Avalonia.Desktop": {
               "target": "Package",
-              "version": "[11.1.0, )"
+              "version": "[11.3.0, )"
             },
             "BitMiracle.LibTiff.NET": {
               "target": "Package",
@@ -64,7 +64,7 @@
             },
             "SkiaSharp": {
               "target": "Package",
-              "version": "[3.116.1, )"
+              "version": "[3.119.0, )"
             }
           },
           "imports": [
@@ -135,19 +135,19 @@
           "dependencies": {
             "Avalonia": {
               "target": "Package",
-              "version": "[11.1.0, )"
+              "version": "[11.3.0, )"
             },
             "Avalonia.Diagnostics": {
               "target": "Package",
-              "version": "[11.1.0, )"
+              "version": "[11.3.0, )"
             },
             "Avalonia.Fonts.Inter": {
               "target": "Package",
-              "version": "[11.1.0, )"
+              "version": "[11.3.0, )"
             },
             "Avalonia.Themes.Fluent": {
               "target": "Package",
-              "version": "[11.1.0, )"
+              "version": "[11.3.0, )"
             },
             "BitMiracle.LibTiff.NET": {
               "target": "Package",
@@ -155,11 +155,11 @@
             },
             "CommunityToolkit.Mvvm": {
               "target": "Package",
-              "version": "[8.2.0, )"
+              "version": "[8.4.0, )"
             },
             "SkiaSharp": {
               "target": "Package",
-              "version": "[3.116.1, )"
+              "version": "[3.119.0, )"
             }
           },
           "imports": [

@@ -1,0 +1,125 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="1200" d:DesignHeight="800"
+             x:Class="AvaloniaApplication1.Views.HomeView">
+
+	<UserControl.Styles>
+		<!-- Стиль для анимированных кнопок -->
+		<Style Selector="Button">
+			<Setter Property="Background" Value="{DynamicResource ButtonGradient}"/>
+			<Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="CornerRadius" Value="8"/>
+			<Setter Property="Padding" Value="20,12"/>
+			<Setter Property="Margin" Value="0,10"/>
+			<Setter Property="FontSize" Value="16"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Width" Value="240"/>
+			<Setter Property="HorizontalAlignment" Value="Center"/>
+			<Setter Property="Effect">
+				<Setter.Value>
+					<DropShadowEffect BlurRadius="10" Color="#4361ee" Opacity="0.3"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style Selector="Button:hover">
+			<Setter Property="Background" Value="{DynamicResource ButtonHoverGradient}"/>
+			<Setter Property="Effect">
+				<Setter.Value>
+					<DropShadowEffect BlurRadius="15" Color="#4361ee" Opacity="0.5"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style Selector="Button:pressed">
+			<Setter Property="Background" Value="#3a0ca3"/>
+		</Style>
+	</UserControl.Styles>
+
+	<UserControl.Resources>
+		<!-- Цветовая палитра -->
+		<SolidColorBrush x:Key="PrimaryColor" Color="#4361ee"/>
+		<SolidColorBrush x:Key="SecondaryColor" Color="#3a0ca3"/>
+		<SolidColorBrush x:Key="AccentColor" Color="#f72585"/>
+		<SolidColorBrush x:Key="DarkBackground" Color="#0f172a"/>
+		<SolidColorBrush x:Key="LightBackground" Color="#1e293b"/>
+		<SolidColorBrush x:Key="TextColor" Color="#f8fafc"/>
+
+		<!-- Градиенты -->
+		<LinearGradientBrush x:Key="MainGradient" StartPoint="0,0" EndPoint="1,1">
+			<GradientStop Offset="0" Color="#0f172a"/>
+			<GradientStop Offset="1" Color="#1e293b"/>
+		</LinearGradientBrush>
+
+		<LinearGradientBrush x:Key="ButtonGradient" StartPoint="0,0" EndPoint="0,1">
+			<GradientStop Offset="0" Color="#4361ee"/>
+			<GradientStop Offset="1" Color="#3a0ca3"/>
+		</LinearGradientBrush>
+
+		<LinearGradientBrush x:Key="ButtonHoverGradient" StartPoint="0,0" EndPoint="0,1">
+			<GradientStop Offset="0" Color="#3a0ca3"/>
+			<GradientStop Offset="1" Color="#4361ee"/>
+		</LinearGradientBrush>
+	</UserControl.Resources>
+
+	<Grid Background="{DynamicResource MainGradient}">
+		<!-- Декоративные элементы фона -->
+		<Canvas>
+			<Path Fill="#4361ee20" Data="M 0,0 L 0,400 L 300,200 Z"/>
+			<Ellipse Width="300" Height="300" Fill="#f7258520" Canvas.Left="800" Canvas.Top="-100"/>
+			<Ellipse Width="200" Height="200" Fill="#4cc9f020" Canvas.Left="-50" Canvas.Top="500"/>
+		</Canvas>
+
+		<!-- Основное содержимое -->
+		<Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+			<StackPanel Spacing="40" Width="600">
+				<!-- Заголовок с эффектом неоновой подсветки -->
+				<StackPanel HorizontalAlignment="Center">
+					<TextBlock Text="TIFF.Editor"
+                               FontSize="72"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource TextColor}"
+                               HorizontalAlignment="Center">
+						<TextBlock.Effect>
+							<DropShadowEffect BlurRadius="20" Color="#4361ee" Opacity="0.7"/>
+						</TextBlock.Effect>
+					</TextBlock>
+				</StackPanel>
+
+				<!-- Кнопки с анимацией -->
+				<StackPanel Spacing="15" HorizontalAlignment="Center">
+					<Button Content="Начать работу" Click="StartWork_Click"/>
+					<Button Content="Инструкция" Click="OpenManual_Click"
+                            Background="Transparent"
+                            BorderBrush="{DynamicResource PrimaryColor}"
+                            BorderThickness="2">
+						<Button.Styles>
+							<Style Selector="Button">
+								<Setter Property="Background" Value="Transparent"/>
+							</Style>
+							<Style Selector="Button:hover">
+								<Setter Property="Background" Value="#4361ee20"/>
+							</Style>
+						</Button.Styles>
+					</Button>
+				</StackPanel>
+			</StackPanel>
+		</Grid>
+
+		<!-- Футер -->
+		<TextBlock Text="v1.0.0 © 2025 TIFF.Editor"
+                   Foreground="#64748b"
+                   FontSize="12"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,20"/>
+	</Grid>
+</UserControl>
+
+

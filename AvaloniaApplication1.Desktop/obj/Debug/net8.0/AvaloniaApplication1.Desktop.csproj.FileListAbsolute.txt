@@ -4,6 +4,7 @@ C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplica
 C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.AssemblyInfoInputs.cache
 C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.AssemblyInfo.cs
 C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.csproj.CoreCompileInputs.cache
+C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.sourcelink.json
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\AvaloniaApplication1.Desktop.exe
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\AvaloniaApplication1.Desktop.deps.json
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\AvaloniaApplication1.Desktop.runtimeconfig.json
@@ -21,7 +22,6 @@ C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.OpenGL
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Vulkan.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Controls.ColorPicker.dll
-C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Controls.DataGrid.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Desktop.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Diagnostics.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Fonts.Inter.dll
@@ -31,6 +31,7 @@ C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Remote
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Skia.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Themes.Fluent.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Themes.Simple.dll
+C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Win32.Automation.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.Win32.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\Avalonia.X11.dll
 C:\project_archive\AvaloniaApplication1.Desktop\bin\Debug\net8.0\BitMiracle.LibTiff.NET.dll
@@ -68,4 +69,3 @@ C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\refint\Avalonia
 C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.pdb
 C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.genruntimeconfig.cache
 C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\ref\AvaloniaApplication1.Desktop.dll
-C:\project_archive\AvaloniaApplication1.Desktop\obj\Debug\net8.0\AvaloniaApplication1.Desktop.sourcelink.json

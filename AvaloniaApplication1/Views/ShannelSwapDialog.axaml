@@ -37,7 +37,7 @@
 		</StackPanel>
 
 		<StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Right" Spacing="10">
-			<Button Content="Ок" Width="80" Click="OkButton_Click"/>
+			<Button Content="Сохранить" Width="93" Click="OkButton_Click"/>
 			<Button Content="Закрыть" Width="80" Click="CancelButton_Click"/>
 		</StackPanel>
 	</Grid>

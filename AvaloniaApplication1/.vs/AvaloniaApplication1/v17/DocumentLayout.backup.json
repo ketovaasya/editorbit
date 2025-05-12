@@ -3,28 +3,59 @@
   "WorkspaceRootPath": "C:\\project_archive\\AvaloniaApplication1\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\shannelswapdialog.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\shannelswapdialog.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\mainview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\mainview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\manualview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\manualview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\app.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:app.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\homeview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\homeview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\manualview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\manualview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:app.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\mainwindow.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\mainwindow.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\mainview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\mainview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\homeview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\homeview.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\mainwindow.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\mainwindow.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{89F043B8-D951-4708-AF52-14E0B6CFD9BA}|..\\AvaloniaApplication1.Desktop\\AvaloniaApplication1.Desktop.csproj|c:\\project_archive\\avaloniaapplication1.desktop\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\redactor.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\redactor.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\shannelswapdialog.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
-      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\shannelswapdialog.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\shannelswapdialog.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\shannelswapdialog.axaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\redactor.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
       "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\redactor.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|c:\\project_archive\\avaloniaapplication1\\views\\mainview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
-      "RelativeMoniker": "D:0:0:{D6D813FC-CF39-44FF-B41D-8F02EC62AEE4}|AvaloniaApplication1.csproj|solutionrelative:views\\mainview.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
     }
   ],
   "DocumentGroupContainers": [
@@ -44,82 +75,175 @@
         },
         {
           "DockedWidth": 377,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "ShannelSwapDialog.axaml",
               "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\ShannelSwapDialog.axaml",
               "RelativeDocumentMoniker": "Views\\ShannelSwapDialog.axaml",
               "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\ShannelSwapDialog.axaml",
               "RelativeToolTip": "Views\\ShannelSwapDialog.axaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-04-26T13:34:52.557Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ShannelSwapDialog.axaml.cs",
-              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\ShannelSwapDialog.axaml.cs",
-              "RelativeDocumentMoniker": "Views\\ShannelSwapDialog.axaml.cs",
-              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\ShannelSwapDialog.axaml.cs",
-              "RelativeToolTip": "Views\\ShannelSwapDialog.axaml.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAAAiwC0AAAAqAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-26T13:34:51.134Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Redactor.axaml.cs",
-              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\Redactor.axaml.cs",
-              "RelativeDocumentMoniker": "Views\\Redactor.axaml.cs",
-              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\Redactor.axaml.cs*",
-              "RelativeToolTip": "Views\\Redactor.axaml.cs*",
-              "ViewState": "AgIAABkEAAAAAAAAAAAuwBkEAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-02T11:12:18.418Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Redactor.axaml",
-              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\Redactor.axaml",
-              "RelativeDocumentMoniker": "Views\\Redactor.axaml",
-              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\Redactor.axaml",
-              "RelativeToolTip": "Views\\Redactor.axaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-03-02T11:12:09.285Z",
+              "WhenOpened": "2025-05-11T12:09:57.387Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "ManualView.axaml.cs",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\ManualView.axaml.cs",
+              "RelativeDocumentMoniker": "Views\\ManualView.axaml.cs",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\ManualView.axaml.cs",
+              "RelativeToolTip": "Views\\ManualView.axaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T10:49:20.474Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ManualView.axaml",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\ManualView.axaml",
+              "RelativeDocumentMoniker": "Views\\ManualView.axaml",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\ManualView.axaml",
+              "RelativeToolTip": "Views\\ManualView.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-11T10:48:12.311Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "App.axaml",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\App.axaml",
+              "RelativeDocumentMoniker": "App.axaml",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\App.axaml",
+              "RelativeToolTip": "App.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-11T09:56:43.33Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "MainView.axaml",
               "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\MainView.axaml",
               "RelativeDocumentMoniker": "Views\\MainView.axaml",
               "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\MainView.axaml",
               "RelativeToolTip": "Views\\MainView.axaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2025-01-21T15:02:28.959Z",
+              "WhenOpened": "2025-05-11T08:18:47.617Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
+              "Title": "MainWindow.axaml",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\MainWindow.axaml",
+              "RelativeDocumentMoniker": "Views\\MainWindow.axaml",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\MainWindow.axaml",
+              "RelativeToolTip": "Views\\MainWindow.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-11T08:16:02.332Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "HomeView.axaml",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\HomeView.axaml",
+              "RelativeDocumentMoniker": "Views\\HomeView.axaml",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\HomeView.axaml",
+              "RelativeToolTip": "Views\\HomeView.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-05-11T08:14:13.363Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "App.axaml.cs",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\App.axaml.cs",
+              "RelativeDocumentMoniker": "App.axaml.cs",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\App.axaml.cs",
+              "RelativeToolTip": "App.axaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T08:13:57.775Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1.Desktop\\Program.cs",
+              "RelativeDocumentMoniker": "..\\AvaloniaApplication1.Desktop\\Program.cs",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1.Desktop\\Program.cs",
+              "RelativeToolTip": "..\\AvaloniaApplication1.Desktop\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T08:12:21.922Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "HomeView.axaml.cs",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\HomeView.axaml.cs",
+              "RelativeDocumentMoniker": "Views\\HomeView.axaml.cs",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\HomeView.axaml.cs",
+              "RelativeToolTip": "Views\\HomeView.axaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T08:07:41.352Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "MainView.axaml.cs",
               "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\MainView.axaml.cs",
               "RelativeDocumentMoniker": "Views\\MainView.axaml.cs",
-              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\MainView.axaml.cs*",
-              "RelativeToolTip": "Views\\MainView.axaml.cs*",
-              "ViewState": "AgIAAIwAAAAAAAAAAAAAwJQAAAAAAAAAAAAAAA==",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\MainView.axaml.cs",
+              "RelativeToolTip": "Views\\MainView.axaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-01-30T14:45:08.074Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-01-30T14:45:08.074Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "MainWindow.axaml.cs",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\MainWindow.axaml.cs",
+              "RelativeDocumentMoniker": "Views\\MainWindow.axaml.cs",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\MainWindow.axaml.cs",
+              "RelativeToolTip": "Views\\MainWindow.axaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-11T08:15:58.933Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Redactor.axaml.cs",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\Redactor.axaml.cs",
+              "RelativeDocumentMoniker": "Views\\Redactor.axaml.cs",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\Redactor.axaml.cs",
+              "RelativeToolTip": "Views\\Redactor.axaml.cs",
+              "ViewState": "AgIAAHQCAAAAAAAAAAApwIECAABGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-02T11:12:18.418Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Redactor.axaml",
+              "DocumentMoniker": "C:\\project_archive\\AvaloniaApplication1\\Views\\Redactor.axaml",
+              "RelativeDocumentMoniker": "Views\\Redactor.axaml",
+              "ToolTip": "C:\\project_archive\\AvaloniaApplication1\\Views\\Redactor.axaml",
+              "RelativeToolTip": "Views\\Redactor.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-03-02T11:12:09.285Z"
             }
           ]
         }

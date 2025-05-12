@@ -7,88 +7,88 @@
              x:Class="AvaloniaApplication1.Views.MainView"
              x:DataType="vm:MainViewModel">
 
-    <UserControl.Styles>
-        <!-- Общие стили -->
-        <Style Selector="Button">
-            <Setter Property="Background" Value="#5DADE2"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Padding" Value="10"/>
-            <Setter Property="Margin" Value="10,5"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="BorderBrush" Value="#2C3E50"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Height" Value="40"/>
-        </Style>
+	<UserControl.Styles>
+		<!-- Общие стили -->
+		<Style Selector="Button">
+			<Setter Property="Background" Value="#5DADE2"/>
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Padding" Value="10"/>
+			<Setter Property="Margin" Value="10,5"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="BorderBrush" Value="#2C3E50"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="Height" Value="40"/>
+		</Style>
 
-        <Style Selector="Button:hover">
-            <Setter Property="Background" Value="#1ABC9C"/>
-        </Style>
+		<Style Selector="Button:hover">
+			<Setter Property="Background" Value="#1ABC9C"/>
+		</Style>
 
-        <Style Selector="Button:pressed">
-            <Setter Property="Background" Value="#16A085"/>
-            <Setter Property="BorderBrush" Value="#1ABC9C"/>
-        </Style>
+		<Style Selector="Button:pressed">
+			<Setter Property="Background" Value="#16A085"/>
+			<Setter Property="BorderBrush" Value="#1ABC9C"/>
+		</Style>
 
-        <Style Selector="TextBlock">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="#95A5A6"/>
-        </Style>
+		<Style Selector="TextBlock">
+			<Setter Property="FontSize" Value="14"/>
+			<Setter Property="Foreground" Value="#95A5A6"/>
+		</Style>
 
-        <Style Selector="StackPanel">
-            <Setter Property="Spacing" Value="10"/>
-        </Style>
+		<Style Selector="StackPanel">
+			<Setter Property="Spacing" Value="10"/>
+		</Style>
 
-        <Style Selector="Menu">
-            <Setter Property="Background" Value="#1E2B32"/>
-        </Style>
+		<Style Selector="Menu">
+			<Setter Property="Background" Value="#1E2B32"/>
+		</Style>
 
-        <Style Selector="MenuItem">
-            <Setter Property="Foreground" Value="#5DADE2"/>
-            <Setter Property="Background" Value="Transparent"/>
-        </Style>
+		<Style Selector="MenuItem">
+			<Setter Property="Foreground" Value="#5DADE2"/>
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
 
-        <Style Selector="MenuItem:top-level">
-            <Setter Property="Foreground" Value="#ECF0F1"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Padding" Value="10,5"/>
-        </Style>
+		<Style Selector="MenuItem:top-level">
+			<Setter Property="Foreground" Value="#ECF0F1"/>
+			<Setter Property="FontWeight" Value="Bold"/>
+			<Setter Property="Padding" Value="10,5"/>
+		</Style>
 
-        <Style Selector="MenuItem:top-level:hover">
-            <Setter Property="Background" Value="#2C3E50"/>
-        </Style>
+		<Style Selector="MenuItem:top-level:hover">
+			<Setter Property="Background" Value="#2C3E50"/>
+		</Style>
 
-        <Style Selector="MenuItem:submenu">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#34495E"/>
-        </Style>
-    </UserControl.Styles>
+		<Style Selector="MenuItem:submenu">
+			<Setter Property="Foreground" Value="White"/>
+			<Setter Property="Background" Value="#34495E"/>
+		</Style>
+	</UserControl.Styles>
 
-    <Grid RowDefinitions="Auto, *" ColumnDefinitions="*, 200">
-        <!-- Меню (занимает всю ширину) -->
-        <Menu Grid.Row="0" Grid.ColumnSpan="2">
-            <MenuItem Header="Файл">
-                <MenuItem Header="Открыть файл" Click="LoadFile_Click"/>
-                <MenuItem Header="Сохранить файл TIFF" Click="SaveFile_Click"/>
-                <MenuItem Header="Сохранить в 8-бит TIFF" Click="SaveFile8bit_Click"/>
-                <MenuItem Header="Закрыть файл" Click="CloseFile_Click"/>
-            </MenuItem>
-            <MenuItem Header="Каналы">
-                <MenuItem Header="Поменять каналы местами" Click="SwapChannelsButton_Click"/>
-                <MenuItem Header="Добавить альфа-канал" Click="AddAlphaChannelButton_Click"/>
-                <MenuItem Header="Удалить альфа-канал" Click="RemoveAlphaChannelButton_Click"/>
-            </MenuItem>
-        </Menu>
+	<Grid RowDefinitions="Auto, *" ColumnDefinitions="*, 200">
+		<!-- Меню (занимает всю ширину) -->
+		<Menu Grid.Row="0" Grid.ColumnSpan="2">
+			<MenuItem Header="Файл">
+				<MenuItem Header="Открыть файл" Click="LoadFile_Click"/>
+				<MenuItem Header="Сохранить файл TIFF" Click="SaveFile_Click"/>
+				<MenuItem Header="Сохранить в 8-бит TIFF" Click="SaveFile8bit_Click"/>
+				<MenuItem Header="Закрыть файл" Click="CloseFile_Click"/>
+			</MenuItem>
+			<MenuItem Header="Каналы">
+				<MenuItem Header="Поменять каналы местами" Click="SwapChannelsButton_Click"/>
+				<MenuItem Header="Добавить альфа-канал" Click="AddAlphaChannelButton_Click"/>
+				<MenuItem Header="Удалить альфа-канал" Click="RemoveAlphaChannelButton_Click"/>
+			</MenuItem>
+		</Menu>
 
-        <!-- Основная область (вкладки и инструменты) -->
-        <Grid Grid.Row="1" Grid.Column="0">
-            <TabControl x:Name="TabNavigation"
+		<!-- Основная область (вкладки и инструменты) -->
+		<Grid Grid.Row="1" Grid.Column="0">
+			<TabControl x:Name="TabNavigation"
                         TabStripPlacement="Top"
                         MinHeight="15">
-                <TabControl.Resources>
-                    <DataTemplate x:Key="TabHeaderTemplate">
-                        <StackPanel Orientation="Horizontal" Spacing="5">
-                            <TextBlock Text="{Binding}" VerticalAlignment="Center"/>
-                            <Button Content="X"
+				<TabControl.Resources>
+					<DataTemplate x:Key="TabHeaderTemplate">
+						<StackPanel Orientation="Horizontal" Spacing="5">
+							<TextBlock Text="{Binding}" VerticalAlignment="Center"/>
+							<Button Content="X"
                                     Background="Transparent"
                                     BorderThickness="0"
                                     Foreground="Red"
@@ -96,42 +96,31 @@
                                     Padding="2"
                                     Click="CloseTabButton_Click"
                                     Tag="{Binding}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </TabControl.Resources>
-                <TabControl.ItemTemplate>
-                    <DataTemplate>
-                        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource TabHeaderTemplate}"/>
-                    </DataTemplate>
-                </TabControl.ItemTemplate>
-            </TabControl>
-        </Grid>
+						</StackPanel>
+					</DataTemplate>
+				</TabControl.Resources>
+				<TabControl.ItemTemplate>
+					<DataTemplate>
+						<ContentControl Content="{Binding}" ContentTemplate="{StaticResource TabHeaderTemplate}"/>
+					</DataTemplate>
+				</TabControl.ItemTemplate>
+			</TabControl>
+		</Grid>
 
-        <!-- Панель инструментов -->
-        <StackPanel Grid.Row="1" Grid.Column="1" Background="#2C3E50" Width="60" Margin="0" HorizontalAlignment="Right">
-            <Button x:Name="CropButton" Content="✂" Click="CropButton_Click" ToolTip.Tip="Обрезка"/>
-            <Button x:Name="RotateButton" Content="⟳" Click="RotateButton_Click" ToolTip.Tip="Поворот"/>
-            <Button x:Name="SquareButton" Content="□" Click="SquareDrawButton_Click" ToolTip.Tip="Квадрат"/>
-            <Button x:Name="CircleButton" Content="○" Click="CircleDrawButton_Click" ToolTip.Tip="Круг"/>
-            <Button x:Name="LineDrawButton" Content="-" Click="LineDrawButton_Click" ToolTip.Tip="Линия"/>
-            
-            <!-- Группа кнопок для работы с каналами -->
-            <Separator Margin="0,10" Background="#5DADE2"/>
-            <TextBlock Text="Каналы" Foreground="White" HorizontalAlignment="Center"/>
-            <Button x:Name="SwapChannelsButton" Content="⇄" Click="SwapChannelsButton_Click" ToolTip.Tip="Поменять каналы"/>
-        </StackPanel>
-    </Grid>
+		<!-- Панель инструментов -->
+		<StackPanel Grid.Row="1" Grid.Column="1" Background="#2C3E50" Width="60" Margin="0" HorizontalAlignment="Right">
+			<Button x:Name="CropButton" Content="✂" Click="CropButton_Click" ToolTip.Tip="Обрезка"/>
+			<Button x:Name="RotateButton" Content="⟳" Click="RotateButton_Click" ToolTip.Tip="Поворот"/>
+			<Button x:Name="SquareButton" Content="□" Click="SquareDrawButton_Click" ToolTip.Tip="Квадрат"/>
+			<Button x:Name="CircleButton" Content="○" Click="CircleDrawButton_Click" ToolTip.Tip="Круг"/>
+			<Button x:Name="LineDrawButton" Content="-" Click="LineDrawButton_Click" ToolTip.Tip="Линия"/>
+			<Button x:Name="InfoButton" Content="I"/>
+
+			<!-- Группа кнопок для работы с каналами -->
+			<Separator Margin="0,10" Background="#5DADE2"/>
+			<TextBlock Text="Каналы" Foreground="White" HorizontalAlignment="Center"/>
+			<Button x:Name="SwapChannelsButton" Content="⇄" Click="SwapChannelsButton_Click" ToolTip.Tip="Поменять каналы"/>
+		</StackPanel>
+	</Grid>
 </UserControl>
-
-
-
-
-
-
-
-
-
-
-
-
 
